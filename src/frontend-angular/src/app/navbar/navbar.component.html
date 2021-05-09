@@ -1,0 +1,26 @@
+<div class="header">
+    <div class="header-logo">AUTOCARS</div>
+    <div class="header-menu">
+        <div value="">
+            {{ 'navbar.home' | translate }}
+        </div>
+        <div value="shop">
+            {{ 'navbar.shop' | translate }}
+        </div>
+        <div class="header-menu-lang">
+            {{ 'navbar.lang' | translate }}
+            <div class="header-menu-lang-menu">
+                <div (click)="changeLang('en')">
+                    {{ 'navbar.english' | translate }}
+                </div>
+                <div (click)="changeLang('es')">
+                    {{ 'navbar.spanish' | translate }}
+                </div>
+            </div>
+        </div>
+        <div value="user">
+            {{ 'navbar.account' | translate }}
+        </div>
+    </div>
+</div>
+<div class="header-separator"></div>
