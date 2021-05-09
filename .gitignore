@@ -1,0 +1,12 @@
+src/html/phpmyadmin
+src/html/
+src/frontend/images/
+src/frontend/icon/
+src/phpmyadmin/
+src/frontend/img/
+data/db/*
+!data/db/.gitkeep
+triggers.sql
+data/img/*
+!data/img/.gitkeep
+src/frontend/

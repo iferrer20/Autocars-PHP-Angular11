@@ -1,0 +1,30 @@
+version: "3"  # optional since v1.27.0
+services:
+  web:
+    build: .
+    ports:
+      - "80:80"
+    volumes:
+      - ./src/:/var/www/html/src:ro
+      - ./config/nginx-autocars.conf:/etc/nginx/sites-available/default:ro
+      - ./data/img/:/var/www/html/img/:rw
+  db:
+    image: mysql:5.7
+    container_name: db
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: 1
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./data/db:/var/lib/mysql
+
+
+        
+#volumes:
+#  dbdata:
+#   driver: local
+#   driver_opts:
+#     type: 'none'
+#     o: 'bind'
+#     device: '/home/iferrer/yolanda/data/db'
+
