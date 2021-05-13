@@ -32,6 +32,8 @@ RUN echo "deb https://packages.sury.org/php/ buster main" | tee /etc/apt/sources
 RUN apt-get update && \
     apt-get install -y nginx
 
+RUN rm -rf /var/lib/apt/lists/*
+
 #SERVICES INIT
 CMD /etc/init.d/php8.0-fpm start && \
     nginx -t && \

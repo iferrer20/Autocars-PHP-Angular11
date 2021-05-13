@@ -1,0 +1,14 @@
+<div>
+    <div class="car-el-options"><i class="gg-more-vertical-alt"></i></div>
+    <div class="car-el-option-menu">
+        <div class="car-el-option-el" value="update">Update</div>
+        <div class="car-el-option-el" value="delete">Delete</div>
+    </div>
+    <div class="car-el-img" style="background-image: url('http://localhost/img/cars/{{car.id}}.jpg');"></div>
+    <div class="car-el-info">
+        <div class="car-el-info-name">{{car.name}}</div>
+        <div class="car-el-info-price">{{ car.price | number:'.0' }} €</div>
+        <div class="car-el-info-description">{{car.description}}</div>
+        <div class="car-el-info-km">KM: {{car.km}}</div>
+    </div>
+</div>

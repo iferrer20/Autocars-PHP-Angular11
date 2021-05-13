@@ -1,8 +1,35 @@
 {
-    "navbar.home": "Home",
-    "navbar.shop": "Shop",
-    "navbar.lang": "Lang",
-    "navbar.english": "English",
-    "navbar.spanish": "Spanish",
-    "navbar.account": "Account"
+    "navbar": {
+        "home": "Home",
+        "shop": "Shop",
+        "lang": "Lang",
+        "english": "English",
+        "spanish": "Spanish",
+        "account": "Account"
+    },
+    "filters": {
+        "categories": "Categories",
+        "offroad": "Offroad",
+        "van": "Van",
+        "minivan": "Minivan",
+        "sporty": "Sporty",
+        "price": "Price",
+        "wantopay": "How much do you want to pay?",
+        "from": "From",
+        "to": "To",
+        "cancel": "Cancel",
+        "apply": "Apply",
+        "posted": "Posted",
+        "today": "Today",
+        "week": "This week",
+        "month": "This month",
+        "year": "This year",
+        "orderby": "Order by",
+        "expensive": "Most expensive",
+        "morekm": "More kilometers",
+        "lesskm": "Less kilometers",
+        "cheap": "Most cheaper",
+        "popular": "Popularity",
+        "recent": "Recent cars"
+    }
 }

@@ -1,0 +1,92 @@
+<div class="car-filter">
+    <input #text type="text" class="car-filter-search" (input)="setText($any($event.target).value)" placeholder="Search...">
+    <div class="car-filter-autocomplete"></div>
+    <div>
+        <div class="car-filter-button" (click)="categoryOpened = !categoryOpened">
+            {{ 'filters.categories' | translate }}
+            <i class="gg-chevron-down"></i>
+        </div>
+        <div class="car-filter-modal modal-category" [ngClass]="{'car-filter-modal-opened': categoryOpened}">
+            <div class="modal-category-el" *ngFor="let category of categories" (click)="setCategory(category)" [ngClass]="{'modal-el-selected': search.categories.includes(category)}">
+                {{ 'filters.' + category | translate }}
+            </div>
+        </div>
+    </div>
+    
+    <div>
+        <div class="car-filter-button" (click)="priceOpened = !priceOpened">
+            {{ 'filters.price' | translate }}
+            <!-- <text-es>Precio</text-es>
+            <text-en>Price</text-en> -->
+            <i class="gg-chevron-down"></i>
+        </div>
+        <div class="car-filter-modal" [ngClass]="{'car-filter-modal-opened': priceOpened}">
+            <div class="car-filter-modal-label">
+                {{ 'filters.wantopay' | translate }}
+                <!-- <text-es>¿Cuanto quieres pagar?</text-es>
+                <text-en>How much do you want to pay?</text-en> -->
+            </div>
+            <ngx-slider [(value)]="search.min_price" [(highValue)]="search.max_price" [options]="rangeSliderOptions"></ngx-slider>
+            <!-- <div class="car-filter-centered car-filter-range" min="0" max="50000">
+                <div class="car-filter-range-nocolor"></div>
+                <div class="car-filter-range-radio car-filter-range-radio-min"><i class="gg-chevron-right"></i></div>
+                <div class="car-filter-range-line"></div>
+                <div class="car-filter-range-radio car-filter-range-radio-max"><i class="gg-chevron-left"></i></div>
+            </div> -->
+
+            <div class="car-filter-modal-from-to">
+                <div>
+                    <div class="car-filter-modal-label">
+                        {{ 'filters.from' | translate }}
+                        <!-- <text-es>Desde</text-es>
+                        <text-en>From</text-en> -->
+                    </div>
+                    <input type="number" value="{{ search.min_price }}" (input)="search.min_price = $any($event.target).value">
+                </div>
+                <div>
+                    <div class="car-filter-modal-label">
+                        {{ 'filters.to' | translate }}
+                        <!-- <text-es>Hasta</text-es>
+                        <text-en>To</text-en> -->
+                    </div>
+                    <input type="number" value="{{ search.max_price }}" (input)="search.max_price = $any($event.target).value">
+                </div>
+            </div>
+            <div class="car-filter-modal-price-buttons">
+                <div class="car-filter-modal-cancel-button">
+                    <!-- <text-es>Cancelar</text-es>
+                    <text-en>Cancel</text-en> -->
+                    {{ 'filters.cancel' | translate }}
+                </div>
+                <div class="car-filter-modal-button car-filter-modal-apply-button" (click)="onApplyPrice()">
+                    {{ 'filters.apply' | translate }}
+                    <!-- <text-es>Aplicar</text-es>
+                    <text-en>Apply</text-en> -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <div>
+        <div class="car-filter-button car-filter-published" (click)="postedOpened = !postedOpened">
+            {{ 'filters.posted' | translate }}
+            <i class="gg-chevron-down"></i>
+        </div>
+        <div class="car-filter-modal modal-published" [ngClass]="{'car-filter-modal-opened': postedOpened}">
+            <div class="modal-published-el" value="today" *ngFor="let publishedOp of publishedOps" (click)="setPublished(publishedOp)" [ngClass]="{'modal-el-selected': publishedOp == search.published}">
+                {{ 'filters.' + publishedOp | translate }}
+            </div>
+        </div>
+    </div>
+    <div>
+        <div class="car-filter-button" (click)="orderbyOpened = !orderbyOpened">
+            {{ 'filters.orderby' | translate }}
+            <i class="gg-chevron-down"></i>
+        </div>
+        <div class="car-filter-modal modal-order" [ngClass]="{'car-filter-modal-opened': orderbyOpened}">
+            <div class="modal-order-el" value="expensive" *ngFor="let sortOp of sortingOps" (click)="setSort(sortOp)" [ngClass]="{'modal-el-selected': sortOp == search.order}">
+                {{ 'filters.' + sortOp | translate }}
+            </div>
+        </div>
+    </div>
+    
+</div>

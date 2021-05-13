@@ -1,8 +1,35 @@
 {
-    "navbar.home": "Inicio",
-    "navbar.shop": "Tienda",
-    "navbar.lang": "Lenguaje",
-    "navbar.english": "Inglés",
-    "navbar.spanish": "Español",
-    "navbar.account": "Cuenta"
+    "navbar": {
+        "home": "Inicio",
+        "shop": "Tienda",
+        "lang": "Lenguaje",
+        "english": "Inglés",
+        "spanish": "Español",
+        "account": "Cuenta"
+    },
+    "filters": {
+        "categories": "Categorias",
+        "offroad": "Todoterreno",
+        "van": "Furgoneta",
+        "minivan": "Minivan",
+        "sporty": "Deportivo",
+        "price": "Precio",
+        "wantopay": "¿Cuanto quieres pagar?",
+        "from": "Desde",
+        "to": "Hasta",
+        "cancel": "Cancelar",
+        "apply": "Aplicar",
+        "posted": "Publicado",
+        "today": "Hoy",
+        "week": "Esta semana",
+        "month": "Este mes",
+        "year": "Este año",
+        "orderby": "Ordenar por",
+        "expensive": "Mas caro",
+        "morekm": "Mas kilometraje",
+        "lesskm": "Menos kilometraje",
+        "cheap": "Mas barato",
+        "popular": "Popularidad",
+        "recent": "Mas reciente"
+    }
 }

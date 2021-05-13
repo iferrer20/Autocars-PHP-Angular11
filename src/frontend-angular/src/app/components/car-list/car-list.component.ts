@@ -1,33 +1,22 @@
 import { ApiConnectorService } from './../../services/api-connector.service';
 import { Component, OnInit } from '@angular/core';
+import { Car } from '../car-element/car-element.component';
 
 export interface CarList {
-  cars: Array<Car>,
+  cars: Car[],
   pages: number
 }
 
 export interface CarSearch {
   text?: string,
-  categories?: Array<string>,
-  min_price?: number,
-  max_price?: number,
+  categories: string[],
+  min_price: number,
+  max_price: number,
   max_km?: number,
   order?: string,
   published?: string,
   brand?: string,
   page?: number
-}
-
-export interface Car {
-  id: number,
-  price: number,
-  name: string,
-  description: string,
-  brand: number,
-  category: string,
-  km: number,
-  views: number,
-  at: string
 }
 
 @Component({
@@ -38,20 +27,18 @@ export interface Car {
 export class CarListComponent implements OnInit {
 
   search: CarSearch = {
-    page: 1
+    page: 1,
+    categories: [],
+    min_price: 500,
+    max_price: 20000
   };
-  cars: Array<Car> = [];
-  pages: number = 1;
+  carlist!: CarList;
 
   constructor(private service: ApiConnectorService) {
-    
   }
   async searchCars() {
     try {
-      let { cars, pages } = await this.service.searchCar(this.search);
-      this.cars = cars;
-      this.pages = pages;
-      console.log(this.cars);
+      this.carlist = await this.service.searchCar(this.search);
     } catch(e) {
       console.log(e);
     }
@@ -61,7 +48,7 @@ export class CarListComponent implements OnInit {
     this.searchCars();
   }
 
-  async ngOnInit() {
+  ngOnInit() {
     this.searchCars();
   }
 }

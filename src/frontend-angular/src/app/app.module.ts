@@ -14,6 +14,10 @@ import { ApiConnectorService } from './services/api-connector.service';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { NavbarComponent } from './navbar/navbar.component';
+import { AccountComponent } from './pages/account/account.component';
+import { CarFilterComponent } from './components/car-filter/car-filter.component';
+import { CarElementComponent } from './components/car-element/car-element.component';
+import { NgxSliderModule } from '@angular-slider/ngx-slider';
 
 @NgModule({
   declarations: [
@@ -23,7 +27,10 @@ import { NavbarComponent } from './navbar/navbar.component';
     CarListComponent,
     CarModalComponent,
     NotFoundComponent,
-    NavbarComponent
+    NavbarComponent,
+    AccountComponent,
+    CarFilterComponent,
+    CarElementComponent
   ],
   imports: [
     BrowserModule,
@@ -37,7 +44,8 @@ import { NavbarComponent } from './navbar/navbar.component';
         },
         deps: [ HttpClient ]
       }
-    })
+    }),
+    NgxSliderModule
   ],
   providers: [ApiConnectorService],
   bootstrap: [AppComponent]
