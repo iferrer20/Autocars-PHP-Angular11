@@ -1,0 +1,11 @@
+{
+  "targets": {
+    "yolanda-web": {
+      "hosting": {
+        "yolanda-web": [
+          "yolanda-web"
+        ]
+      }
+    }
+  }
+}

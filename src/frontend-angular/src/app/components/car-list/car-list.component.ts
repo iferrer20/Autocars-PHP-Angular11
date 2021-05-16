@@ -36,12 +36,18 @@ export class CarListComponent implements OnInit {
 
   constructor(private service: ApiConnectorService) {
   }
+
+  
   async searchCars() {
     try {
       this.carlist = await this.service.searchCar(this.search);
     } catch(e) {
       console.log(e);
     }
+  }
+  onSetFilters() {
+    this.search.page = 1;
+    this.searchCars(); 
   }
   onChangePage(page: number) {
     this.search.page = page;

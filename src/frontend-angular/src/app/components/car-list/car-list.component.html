@@ -1,4 +1,4 @@
-<app-car-filter [search]=search (searchEvent)="searchCars()"></app-car-filter>
+<app-car-filter [search]=search (searchEvent)="onSetFilters()"></app-car-filter>
 <div class="car-list-box">
   <div class="car-list">
     <app-car-element *ngFor="let car of carlist.cars" [car]=car></app-car-element>

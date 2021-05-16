@@ -18,6 +18,10 @@ import { AccountComponent } from './pages/account/account.component';
 import { CarFilterComponent } from './components/car-filter/car-filter.component';
 import { CarElementComponent } from './components/car-element/car-element.component';
 import { NgxSliderModule } from '@angular-slider/ngx-slider';
+import { SigninComponent } from './pages/signin/signin.component';
+import { SignupComponent } from './pages/signup/signup.component';
+import { AngularFireModule } from '@angular/fire';
+import { environment } from 'src/environments/environment';
 
 @NgModule({
   declarations: [
@@ -30,7 +34,9 @@ import { NgxSliderModule } from '@angular-slider/ngx-slider';
     NavbarComponent,
     AccountComponent,
     CarFilterComponent,
-    CarElementComponent
+    CarElementComponent,
+    SigninComponent,
+    SignupComponent
   ],
   imports: [
     BrowserModule,
@@ -45,7 +51,8 @@ import { NgxSliderModule } from '@angular-slider/ngx-slider';
         deps: [ HttpClient ]
       }
     }),
-    NgxSliderModule
+    NgxSliderModule,
+    AngularFireModule.initializeApp(environment.firebase)
   ],
   providers: [ApiConnectorService],
   bootstrap: [AppComponent]
