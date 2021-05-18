@@ -1,2 +1,5 @@
-
-<button (click)="loginWithGoogle()">Login with google</button>
+<firebase-ui (signInSuccessWithAuthResult)="onSocialLogin($event)"></firebase-ui>
+<!-- 
+<button (click)="auth.googleAuth()">Login with google</button>
+<button (click)="auth.twitterAuth()">Login with twitter</button>
+<button (click)="auth.twitterAuth()">Login with twitter</button> -->

@@ -34,13 +34,13 @@ export class CarListComponent implements OnInit {
   };
   carlist!: CarList;
 
-  constructor(private service: ApiConnectorService) {
+  constructor(private api: ApiConnectorService) {
   }
 
   
   async searchCars() {
     try {
-      this.carlist = await this.service.searchCar(this.search);
+      this.carlist = await this.api.searchCar(this.search);
     } catch(e) {
       console.log(e);
     }

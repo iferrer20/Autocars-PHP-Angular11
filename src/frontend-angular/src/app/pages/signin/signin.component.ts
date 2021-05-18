@@ -1,6 +1,11 @@
+import { SocialLogin } from './../../classes/socialLogin';
+// import { firebase } from 'firebase/app';
+import { ApiConnectorService } from './../../services/api-connector.service';
 import { Component, OnInit } from '@angular/core';
+import { UserService } from 'src/app/services/user.service';
+import { FirebaseuiAngularLibraryService, FirebaseUIModule, FirebaseUISignInSuccessWithAuthResult, NativeFirebaseUIAuthConfig } from 'firebaseui-angular';
+import { FirebaseApp } from '@angular/fire';
 import { AngularFireAuth } from '@angular/fire/auth';
-import firebase from 'firebase/app';
 
 @Component({
   selector: 'app-signin',
@@ -9,16 +14,23 @@ import firebase from 'firebase/app';
 })
 export class SigninComponent implements OnInit {
 
-  constructor(private auth: AngularFireAuth) {
-
+  constructor(public user: UserService, private api: ApiConnectorService, private angularfire: AngularFireAuth) {
   }
 
+
+  async onSocialLogin(event: any) {
+    let socialuser = event.authResult.user;
+
+    this.angularfire.signOut(); // Remove stored inecesarry data
+    let social: SocialLogin = {
+      uid: socialuser.uid,
+      email: socialuser.email,
+      name: socialuser.displayName
+    };
+    
+    this.api.socialLogin(social);
+  }
   ngOnInit(): void {
-  }
-
-  async loginWithGoogle() {
-    let user = await this.auth.signInWithPopup(new firebase.auth.GoogleAuthProvider);
-    console.log(user);
   }
 
 }

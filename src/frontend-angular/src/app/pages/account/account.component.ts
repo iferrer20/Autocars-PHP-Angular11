@@ -1,4 +1,3 @@
-import { Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -12,6 +11,7 @@ export class AccountComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    
   }
 
 }
