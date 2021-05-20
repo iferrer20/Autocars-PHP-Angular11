@@ -10,6 +10,10 @@ class UserController extends Controller {
     /*
         
     */
+
+    public function signin_social_post(SocialUser $social_user) {
+        var_dump($social_user);
+    }
     public function list_get() {
 
     }

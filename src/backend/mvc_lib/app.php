@@ -62,22 +62,25 @@ class App {
         foreach ($reflection_params as $param) { // get parameters of action
             $param_name = $param->getName();
             $param_class = $param->getType()->getName();
-            if ($is_class = class_exists($param_class)) {
+            if (class_exists($param_class)) {
                 $obj = new $param_class();
-            }
-            
-            //if (!array_key_exists($param_name, Client::$data)) {
-            //    throw new BadReqException('Insuficient data');
-            //}
-
-            if ($is_class) {
                 array_to_obj($r_param_count > 1 ? Client::$data[$param_name] : Client::$data, $obj, true);
+                
+                $type_reflection = new ReflectionClass(get_class($obj));
+                $props = $type_reflection->getProperties(ReflectionProperty::IS_PUBLIC);
+                foreach($props as $prop) {
+                    if (!isset($obj->{$prop->getName()})) {
+                        throw new BadReqException("You need to specify " . $prop->getName() . " value");
+                    }
+                }
+
                 if (method_exists($obj, "validate")) {
                     $obj->validate();
                 }
             } else {
                 $obj = Client::$data[$param_name];
             }
+
             array_push($params, $obj);
         }
         $reflection_method->invokeArgs($controller, $params); // Call action
