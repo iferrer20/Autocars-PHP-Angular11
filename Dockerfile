@@ -26,7 +26,7 @@ RUN apt-get update && \
 RUN echo "deb https://packages.sury.org/php/ buster main" | tee /etc/apt/sources.list.d/sury-php.list && \
     wget -qO - https://packages.sury.org/php/apt.gpg | apt-key add - && \
     apt-get update && \
-    apt-get install -y php8.0-fpm php8.0-common php8.0-mysql;
+    apt-get install -y php8.0-fpm php8.0-common php8.0-mysql php8.0-curl;
 
 # NGINX INSTALLATION 
 RUN apt-get update && \

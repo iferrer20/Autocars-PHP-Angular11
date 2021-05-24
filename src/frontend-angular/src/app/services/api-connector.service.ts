@@ -1,9 +1,9 @@
+import { SocialSignin } from './../classes/socialSignin';
 import { CarList, CarSearch } from './../components/car-list/car-list.component';
 
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { SocialLogin } from '../classes/socialLogin';
 
 
 @Injectable({
@@ -25,7 +25,7 @@ export class ApiConnectorService {
     return this.req<CarList>('cars/search', 'POST', search);
   }
 
-  socialLogin(social: SocialLogin) {
-    return this.req('user/signin_social', 'POST', social);
+  socialSignin(social: SocialSignin) {
+    return this.req('user/social_signin', 'POST', social);
   }
 }

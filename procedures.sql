@@ -6,8 +6,8 @@ DROP TABLE IF EXISTS users;
 CREATE TABLE users (
   user_id int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
   email varchar(64) NOT NULL UNIQUE,
-  username varchar(20) NOT NULL UNIQUE,
-  password char(45) 
+  username varchar(20) UNIQUE,
+  password char(44) 
 );
 
 -- Procedures
@@ -54,14 +54,15 @@ BEGIN
 
 	SET salt = SUBSTRING(MD5(RAND()) from 1 for 4);
 	SET hash = SHA1(CONCAT(salt, password));
-	INSERT INTO users (email, username, password) VALUES (email, username, CONCAT(salt, '.', hash));
+
+	INSERT INTO users (email, username, password) VALUES (email, username, CONCAT(salt, hash));
 END$$
 DELIMITER ;
 
 DROP PROCEDURE IF EXISTS userSignin;
 DELIMITER $$
 CREATE PROCEDURE userSignin (
-	IN username VARCHAR(20), 
+	IN username VARCHAR(64), 
 	IN password VARCHAR(64)
 ) 
 BEGIN
@@ -70,7 +71,7 @@ BEGIN
 		DECLARE realhash CHAR(40);
 		DECLARE salt CHAR(4);
 		
-		SELECT SUBSTRING_INDEX(u.password, '.', 1), SUBSTRING_INDEX(u.password, '.', -1) 
+		SELECT SUBSTRING(u.password, 1, 4), SUBSTRING(u.password, 5) 
 		INTO salt, realhash 
 		FROM users AS u 
 		WHERE (u.username = username OR u.email = username) 
@@ -85,6 +86,20 @@ BEGIN
 		SIGNAL SQLSTATE '45000'
 		SET MESSAGE_TEXT = 'Invalid username or password';
 	END;
+END$$
+DELIMITER ;
+
+DROP PROCEDURE IF EXISTS userSocialSignin;
+DELIMITER $$
+CREATE PROCEDURE userSocialSignin (
+	IN email VARCHAR(64)
+) 
+BEGIN
+	IF NOT EXISTS(SELECT user_id FROM users AS u WHERE u.email = email) THEN
+		INSERT INTO users (email, username, password) VALUES (email, NULL, NULL);
+	END IF;
+
+	SELECT u.user_id FROM users AS u WHERE u.email = email;
 END$$
 DELIMITER ;
 

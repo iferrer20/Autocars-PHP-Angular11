@@ -9,8 +9,8 @@ function array_to_obj(array $array, object $obj, bool $prevent_xss = false) { //
             try {
                 $obj->{$key} = $value;
             } catch(TypeError $e) {
+                throw new BadReqException("Invalid " . $key . " value");
             }
-            
         }
     }
 }
@@ -71,13 +71,9 @@ function error($str, $code = 400) {
     $res = true;
 }
 
-function sys_error($str) {
+function sys_error($exception) {
     http_response_code(500);
-    var_dump($str);
-    $fp = fopen('error.log', 'a');
-    fwrite($fp, json_encode($str) . '\n');
-    fclose($fp);
-
+    error_log(json_encode($exception), 0);
     echo json_encode(array(
         'success' => false,
         'error' => 'An error ocurred'

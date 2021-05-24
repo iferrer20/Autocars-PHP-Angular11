@@ -14,26 +14,34 @@ class App {
         $controller_name = $uri[0] ?? '';
         $action_name = $uri[1] ?? '';
 
-        if ($controller = $this->load_controller($controller_name)) {
-            if ($action_func = $this->load_action($controller, $action_name)) {
-                try {
+        try {
+            if ($controller = $this->load_controller($controller_name)) {
+                if ($action_func = $this->load_action($controller, $action_name)) {
                     $this->call_middlewares($controller, $action_func);
                     $this->call_action($controller, $action_func);
                     if (!$res) {
                         ok();
                     }
-                } catch(BadReqException $e) {
-                    error($e->getMessage());
-                } catch(Exception $e) {
-                    sys_error($e);
+                } else {
+                    notfound($action_name);
                 }
             } else {
-                notfound($action_name);
+                notfound($controller_name);
             }
-        } else {
-            notfound($controller_name);
+        } catch(Exception $e) {
+            $this->error_handler($e);
         }
-    } 
+    }
+
+    private function error_handler($exception) {
+        try {
+            throw $exception;
+        } catch(BadReqException $e) {
+            error($e->getMessage());
+        } catch(Exception $e) {
+            error($e->getMessage(), 500);
+        }
+    }
 
     private function load_controller($module_name) {
         $file_controller = 'modules/' . $module_name . '/controller.php';
@@ -78,7 +86,15 @@ class App {
                     $obj->validate();
                 }
             } else {
-                $obj = Client::$data[$param_name];
+                if (array_key_exists($param_name, Client::$data) && !is_null(Client::$data[$param_name])) {
+                    if (("is_" . $param_class)(Client::$data[$param_name])) {
+                        $obj = Client::$data[$param_name];
+                    } else {
+                        throw new BadReqException("Invalid " . $param_name . " value");
+                    }
+                } else {
+                    throw new BadReqException("You need to specify " . $param_name . " value");
+                }
             }
 
             array_push($params, $obj);

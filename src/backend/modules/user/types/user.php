@@ -1,7 +1,6 @@
 <?php
 
 class User {
-    public int $user_id = -1;
     public string $firstname = '';
     public string $lastname = '';
     public string $username = '';
