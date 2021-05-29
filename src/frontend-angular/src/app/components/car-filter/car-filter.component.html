@@ -1,5 +1,7 @@
 <div class="car-filter">
-    <input #text type="text" class="car-filter-search" (input)="setText($any($event.target).value)" placeholder="Search...">
+    <input #text type="text" class="car-filter-search" 
+    (input)="setText($any($event.target).value)" 
+    placeholder="Search...">
     <div class="car-filter-autocomplete"></div>
     <div>
         <div class="car-filter-button" (click)="categoryOpened = !categoryOpened">
@@ -7,7 +9,10 @@
             <i class="gg-chevron-down"></i>
         </div>
         <div class="car-filter-modal modal-category" [ngClass]="{'car-filter-modal-opened': categoryOpened}">
-            <div class="modal-category-el" *ngFor="let category of categories" (click)="setCategory(category)" [ngClass]="{'modal-el-selected': search.categories.includes(category)}">
+            <div class="modal-category-el" 
+                *ngFor="let category of categories" 
+                (click)="setCategory(category)" 
+                [ngClass]="{'modal-el-selected': search.categories.includes(category)}">
                 {{ 'filters.' + category | translate }}
             </div>
         </div>
@@ -26,7 +31,10 @@
                 <!-- <text-es>¿Cuanto quieres pagar?</text-es>
                 <text-en>How much do you want to pay?</text-en> -->
             </div>
-            <ngx-slider [(value)]="search.min_price" [(highValue)]="search.max_price" [options]="rangeSliderOptions"></ngx-slider>
+            <ngx-slider 
+                [(value)]="search.min_price" 
+                [(highValue)]="search.max_price" 
+                [options]="rangeSliderOptions"></ngx-slider>
             <!-- <div class="car-filter-centered car-filter-range" min="0" max="50000">
                 <div class="car-filter-range-nocolor"></div>
                 <div class="car-filter-range-radio car-filter-range-radio-min"><i class="gg-chevron-right"></i></div>

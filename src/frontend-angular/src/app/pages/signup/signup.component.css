@@ -1,0 +1,48 @@
+
+:host {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: calc(100% - 60px);
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+#user-signup-email {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+#user-signup-email > input {
+    margin: 5px;
+    outline: none;
+    border: none;
+    background-color: rgb(228, 228, 228);
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 11pt;
+}
+
+#user-signup-email > div {
+    width: 150px;
+    background-color: rgb(255, 72, 72);
+    border: 0;
+    padding: 6px;
+    color: white;
+    font-size: 12pt;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+    margin: 10px;
+}
+#signup-error {
+    color: red;
+    font-size: 12pt;
+    user-select: none;
+}
+#redirect-signin {
+    color: blue;
+    font-size: 11pt;
+    cursor: pointer;
+}

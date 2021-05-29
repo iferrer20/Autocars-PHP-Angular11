@@ -45,7 +45,7 @@ export class CarListComponent implements OnInit {
       console.log(e);
     }
   }
-  onSetFilters() {
+  onChangeFilters() {
     this.search.page = 1;
     this.searchCars(); 
   }

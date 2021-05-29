@@ -13,7 +13,7 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { ApiConnectorService } from './services/api-connector.service';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { NavbarComponent } from './navbar/navbar.component';
+import { NavbarComponent } from './components/navbar/navbar.component';
 import { AccountComponent } from './pages/account/account.component';
 import { CarFilterComponent } from './components/car-filter/car-filter.component';
 import { CarElementComponent } from './components/car-element/car-element.component';
@@ -24,12 +24,12 @@ import { AngularFireModule } from '@angular/fire';
 import { environment } from 'src/environments/environment';
 import firebase from 'firebase/app';
 import { FirebaseUIModule, firebaseui } from 'firebaseui-angular';
+import { FormsModule } from '@angular/forms';
 
 const firebaseUiAuthConfig: firebaseui.auth.Config = {
   signInFlow: 'popup',
   signInOptions: [
     firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-    firebase.auth.TwitterAuthProvider.PROVIDER_ID,
     firebase.auth.GithubAuthProvider.PROVIDER_ID
   ],
   tosUrl: '<your-tos-link>',
@@ -68,7 +68,8 @@ const firebaseUiAuthConfig: firebaseui.auth.Config = {
     }),
     NgxSliderModule,
     AngularFireModule.initializeApp(environment.firebase),
-    FirebaseUIModule.forRoot(firebaseUiAuthConfig)
+    FirebaseUIModule.forRoot(firebaseUiAuthConfig),
+    FormsModule
   ],
   providers: [ApiConnectorService],
   bootstrap: [AppComponent]
