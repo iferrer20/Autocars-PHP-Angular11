@@ -2,7 +2,7 @@
 <div id="user-signup-email">
     <input type="text" placeholder="Email" [(ngModel)]="userSignup.email">
     <input type="text" placeholder="Username" [(ngModel)]="userSignup.username">
-    <input type="password" placeholder="Password" [(ngModel)]="userSignup.password" (keyup.enter)="onSignin()">
+    <input type="password" placeholder="Password" [(ngModel)]="userSignup.password">
     <input type="password" placeholder="Retype password" [(ngModel)]="userSignup.retypePassword" (keyup.enter)="onSignup()">
     <div (click)="onSignup()">Signup</div>
 </div>

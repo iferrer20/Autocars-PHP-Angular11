@@ -21,15 +21,23 @@ class App {
 
                     $this->call_attributes($controller, $action_func);
                     $this->call_action($controller, $action_func);
+                    if (!res::$replied) { // If action don't reply, reply ok
+                        res::ok();
+                    }
                 } else {
                     res::notfound($action_name);
                 }
+                $this->end_controller($controller);
             } else {
                 res::notfound($controller_name);
             }
         } catch(Exception $e) {
             $this->error_handler($e);
         }
+    }
+
+    private function end_controller($controller) {
+        $controller->end();
     }
 
     private function error_handler($exception) {
@@ -97,18 +105,17 @@ class App {
             }
             array_push($params, $obj);
         }
-        $reflection_method->invokeArgs($controller, $params); // Call action
+        $reflection_method->invokeArgs($controller, $params); // Call action with array args
         //$controller->{$func}();
     }
 
-    private function call_attributes($controller, $func) {
+    private function call_attributes($controller, $func) { // PHP 8.0
         $reflection_class = new ReflectionClass(get_class($controller));
         $reflection_method = new ReflectionMethod(get_class($controller), $func);
         $attributes = array_merge(
             $reflection_method->getAttributes(), 
             $reflection_class->getAttributes()
         );
-        $params = $reflection_method->getParameters();
 
         // Call json middleware
         Middleware\json($controller);

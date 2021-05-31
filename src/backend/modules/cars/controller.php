@@ -1,5 +1,7 @@
 <?php
 
+use Utils\res;
+
 class CarsController extends Controller {
 
     // public function list_get() {
@@ -39,7 +41,7 @@ class CarsController extends Controller {
         $pages += is_float($pages) ? 1 : 0;
         $pages = intval($pages);
 
-        Utils\res(array(
+        res::ok(array(
             'cars' => $cars,
             'pages' => $pages
         ));

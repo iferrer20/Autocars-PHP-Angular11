@@ -43,6 +43,7 @@ function get_method() : string {
     return $_SERVER['REQUEST_METHOD'];
 }
 class res {
+    public static bool $replied = false;
     static function redirect($location) {
         header('HTTP/1.1 302 Moved Temporarily');
         header('Location: ' . $location);
@@ -53,6 +54,7 @@ class res {
             "success" => false,
             "error" => $str . " not found"
         ));
+        self::$replied = true;
     }
     static function error($str, $code = 400) {
         http_response_code($code);
@@ -60,6 +62,7 @@ class res {
             'success' => false,
             'error' => $str
         ));
+        self::$replied = true;
     }
     static function sys_error($exception) {
         http_response_code(500);
@@ -68,6 +71,7 @@ class res {
             'success' => false,
             'error' => 'An error ocurred'
         ));
+        self::$replied = true;
     }
     static function ok($val = null) {
         if ($val) {
@@ -80,6 +84,7 @@ class res {
                 'success' => true
             ));
         }
+        self::$replied = true;
     }
 }
 ?>

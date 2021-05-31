@@ -1,5 +1,7 @@
 <?php
 
+namespace Utils;
+
 class Firebase {
     public static string $api_key = "AIzaSyDEYutj0oIxaws-91a3oEfcTLUziXDghQc";
     public static function get_user($token) {
