@@ -1,6 +1,6 @@
 <?php
 
-namespace Middleware;
+namespace Middlewares;
 
 function json($controller) { // Deault middleware
     // Get JSON data from $_POST

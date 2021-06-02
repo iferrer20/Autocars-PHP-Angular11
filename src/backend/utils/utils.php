@@ -42,6 +42,21 @@ function is_image($filename) {
 function get_method() : string {
     return $_SERVER['REQUEST_METHOD'];
 }
+function include_folder($folder) {
+    if (is_dir($folder)) {
+        $files = glob($folder . '/*.php');
+        foreach ($files as $file) {
+            include_once $file;
+        }
+    }
+    
+}
+function get_client_ip() {
+    return $_SERVER['REMOTE_ADDR'];
+}
+function get_cookie($cookie) {
+    return $_COOKIE[$cookie];
+}
 class res {
     public static bool $replied = false;
     static function redirect($location) {

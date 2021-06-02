@@ -10,7 +10,8 @@ class App {
         $uri = htmlentities(str_replace("/api/", "", $_GET['uri'])); // Prevent xss
         $uri = explode('/', rtrim($uri, '/'));  // Split uri 
 
-        $this->uri = $uri;
+        Client::$uri = $uri; // Client uri
+        Client::$ip_addr = Utils\get_client_ip(); // Client ip address
 
         $controller_name = $uri[0] ?? '';
         $action_name = $uri[1] ?? '';
@@ -106,30 +107,32 @@ class App {
             array_push($params, $obj);
         }
         $reflection_method->invokeArgs($controller, $params); // Call action with array args
-        //$controller->{$func}();
     }
 
     private function call_attributes($controller, $func) { // PHP 8.0
         $reflection_class = new ReflectionClass(get_class($controller));
         $reflection_method = new ReflectionMethod(get_class($controller), $func);
         $attributes = array_merge(
-            $reflection_method->getAttributes(), 
-            $reflection_class->getAttributes()
+            $reflection_class->getAttributes(),
+            $reflection_method->getAttributes()
         );
 
         // Call json middleware
-        Middleware\json($controller);
+        Middlewares\json($controller);
 
         // Call middlewares
         foreach ($attributes as $attribute) {
             foreach ($attribute->getArguments() as $argument) {
                 switch ($attribute->getName()) {
                     case 'middlewares':
-                        $fname = 'Middleware\\' . $argument;
+                        $fname = 'Middlewares\\' . $argument;
                         ($fname)($controller);
                         break;
                     case 'utils':
-                        require 'utils/' . $argument;
+                        require 'utils/' . $argument . '.php';
+                        break;
+                    case 'requires':
+                        require $argument;
                         break;
                 }            
             }

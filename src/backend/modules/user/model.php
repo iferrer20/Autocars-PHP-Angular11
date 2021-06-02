@@ -8,6 +8,7 @@ class UserModel extends Model {
             $user->email,
             $user->password
         );
+        return $result[0]['user_id'];
     }
     public function signup(User $user) {
         $result = $this->db->query(
@@ -17,6 +18,7 @@ class UserModel extends Model {
             $user->username,
             $user->password
         );
+        return $result[0]['user_id'];
     }
     public function social_signin($user) {
         $result = $this->db->query(
@@ -24,6 +26,7 @@ class UserModel extends Model {
             's',
             $user->email
         );
+        return $result[0]['user_id'];
     }
 
 }

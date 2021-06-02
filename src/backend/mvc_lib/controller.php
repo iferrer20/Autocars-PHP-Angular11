@@ -27,23 +27,9 @@ abstract class Controller {
     
     public function load_types() {
         $type_folder = 'modules/' . $this->module_name . '/types/';
-        if (is_dir($type_folder)) {
-            $files = glob($type_folder . '*.php');
-            foreach ($files as $filename) {
-                include $filename;
-            }
-        }
+        Utils\include_folder($type_folder);
     }
 
-    public function action_notfound() {
-        new NotFoundController('action ' . $this->uri[2]);
-    }
-    public function notfound($str) {
-        new NotFoundController($str);
-    }
-    public function render(string $name) {
-        $this->view->renderAll($name);
-    }
     public function end() {
         $this->model->db->close();
     }

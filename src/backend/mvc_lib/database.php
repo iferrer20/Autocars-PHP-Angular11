@@ -6,15 +6,17 @@ class Database {
 
     public function connect() {
         if (!isset(Database::$static_conn)) {
-            Database::$static_conn = new mysqli("172.17.0.1", "root", "", "autocars");
-            if (Database::$static_conn->connect_errno) {
+            self::$static_conn = new mysqli("172.17.0.1", "root", "", "autocars");
+            if (self::$static_conn->connect_errno) {
                 throw new MysqlException("Error connecting to db");
             }
         }
         $this->conn = Database::$static_conn;
     }
     public function close() {
-        $this->conn->close();
+        if (isset(self::$static_conn)) { // Close connection if is set
+            self::$static_conn->close();
+        }
     }
     
     public function __construct() {
@@ -35,7 +37,11 @@ class Database {
                     $result->insert_id = $query->insert_id;
                 }
                 $result->query = $query;
-                return $result;
+                if ($result->query) {
+                    return $result->query->fetch_all(MYSQLI_ASSOC);
+                } else {
+                    return 0;
+                }
             }
         } else {
             $stmt = $this->conn->prepare($query_str);
@@ -57,7 +63,11 @@ class Database {
                 throw new MysqlException('Mysqli error: ' . mysqli_error($this->conn));
             }
             $stmt->close();
-            return $result;
+            if ($result->query) {
+                return $result->query->fetch_all(MYSQLI_ASSOC);
+            } else {
+                return 0;
+            }
         }
         
     }

@@ -1,9 +1,10 @@
 <?php
 
 class Client {
-    static array $data = array();
-    static array $uri = array();
-    static string $ip_addr = "";
+    public static array $data = array();
+    public static array $jwt_data;
+    public static array $uri = array();
+    public static string $ip_addr;
 }
 
 

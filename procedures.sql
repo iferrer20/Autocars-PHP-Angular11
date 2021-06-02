@@ -11,6 +11,16 @@ CREATE TABLE users (
 );
 
 -- Procedures
+DROP PROCEDURE IF EXISTS getUserId;
+DELIMITER $$
+CREATE PROCEDURE getUserId (
+    IN email VARCHAR(64)
+)
+BEGIN
+    SELECT u.user_id FROM users AS u WHERE u.email = email OR u.username = email LIMIT 1; 
+END$$
+DELIMITER ;
+
 DROP PROCEDURE IF EXISTS userSignup;
 DELIMITER $$
 CREATE PROCEDURE userSignup (
@@ -56,6 +66,7 @@ BEGIN
 	SET hash = SHA1(CONCAT(salt, password));
 
 	INSERT INTO users (email, username, password) VALUES (email, username, CONCAT(salt, hash));
+    CALL getUserId(email);
 END$$
 DELIMITER ;
 
@@ -85,7 +96,8 @@ BEGIN
 		END IF;
 		SIGNAL SQLSTATE '45000'
 		SET MESSAGE_TEXT = 'Invalid username or password';
-	END;
+    END;
+    CALL getUserId(username);
 END$$
 DELIMITER ;
 
@@ -99,7 +111,7 @@ BEGIN
 		INSERT INTO users (email, username, password) VALUES (email, NULL, NULL);
 	END IF;
 
-	SELECT u.user_id FROM users AS u WHERE u.email = email;
+	CALL getUserId(email);
 END$$
 DELIMITER ;
 
