@@ -12,12 +12,17 @@ class UserController extends Controller {
     }
 
     private function give_token($uid) {
-        setcookie('token', JWT::encode(array('user_id' => $uid)), strtotime('+7 days'), '/', 'localhost', false, true); // http-only security
-        setcookie('logged', true, strtotime('+7 days'), '/', 'localhost', false, false); // No http-only
+        $expires = "+1 week";
+        $token = JWT::encode([
+            'user_id' => $uid,
+            'expires' => strtotime($expires)
+        ]);
+        setcookie('token', $token, strtotime($expires), '/', 'localhost', false, true); // http-only security
+        setcookie('logged', true, strtotime($expires), '/', 'localhost', false, false); // No http-only
     }
     
     #[utils('jwt')]
-    public function signin_post(User $user) {
+    public function signin_post(UserSignin $user) {
         $uid = $this->model->signin($user);
         $this->give_token($uid);
     }
@@ -36,7 +41,12 @@ class UserController extends Controller {
     }
 
     #[middlewares('check_jwt')] // execute middleware before call my_account_get
-    public function my_account_get() {
+    public function my_profile_get() {
+        $user = $this->model->get_user(Client::$jwt_data->user_id);
+        res::ok([
+            'username' => $user->username,
+            'email' => $user->email
+        ]);
         
     }
     

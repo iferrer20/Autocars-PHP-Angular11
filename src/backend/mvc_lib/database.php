@@ -31,7 +31,11 @@ class Database {
             $query = $this->conn->query($query_str);
             $result = (object) [];
             if ($query === false) {
-                throw new MysqlException('Mysqli error: ' . mysqli_error($this->conn));
+                if ($query->sqlstate == 45000) {
+                    throw new BadReqException($stmt->error);
+                } else {
+                    throw new MysqlException('Mysqli error: ' . mysqli_error($this->conn));
+                }
             } else {
                 if (isset($query->insert_id)) {
                     $result->insert_id = $query->insert_id;

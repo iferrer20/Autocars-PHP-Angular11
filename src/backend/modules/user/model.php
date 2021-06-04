@@ -28,6 +28,16 @@ class UserModel extends Model {
         );
         return $result[0]['user_id'];
     }
+    public function get_user($uid) : User {
+        $result = $this->db->query(
+            'SELECT * FROM users WHERE user_id = ?',
+            's',
+            $uid
+        );
+        $user = new User();
+        Utils\array_to_obj($result[0], $user);
+        return $user;
+    }
 
 }
 
