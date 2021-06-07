@@ -3,10 +3,16 @@
 class Database {
     public static mysqli $static_conn;
     public mysqli $conn;
+    private object $credentials;
 
     public function connect() {
         if (!isset(Database::$static_conn)) {
-            self::$static_conn = new mysqli("172.17.0.1", "root", "", "autocars");
+            self::$static_conn = new mysqli(
+                $this->credentials->host, 
+                $this->credentials->user, 
+                $this->credentials->password, 
+                $this->credentials->db_name
+            );
             if (self::$static_conn->connect_errno) {
                 throw new MysqlException("Error connecting to db");
             }
@@ -20,7 +26,7 @@ class Database {
     }
     
     public function __construct() {
-        
+        $this->credentials = Utils\get_json('db');
     }
 
     public function query(string $query_str, string $types = '', ...$values) {

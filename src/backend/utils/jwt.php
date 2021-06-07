@@ -23,6 +23,6 @@ class JWT {
     }
 }
 
-JWT::set_password(\Misc\get_json("jwt")->password);
+JWT::set_password(\Utils\get_json("jwt")->password);
 
 ?>

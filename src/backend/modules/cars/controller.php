@@ -36,8 +36,7 @@ class CarsController extends Controller {
     // #[middlewares('test')]
     public function search_post(CarSearch $search) {
         $cars = $this->model->search_car($search);
-        $car_count = $this->model->search_car_count($search);
-        $pages = $car_count/$search->limit;
+        $pages = $this->model->search_car_count($search)/9;
         $pages += is_float($pages) ? 1 : 0;
         $pages = intval($pages);
 

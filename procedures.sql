@@ -1,3 +1,6 @@
+CREATE DATABASE autocars;
+USE autocars;
+
 -- TABLAS
 DROP TABLE IF EXISTS brands;
 CREATE TABLE brands (
@@ -52,8 +55,8 @@ INSERT INTO brands (name) VALUES ('Volvo');
 DROP TABLE IF EXISTS cars;
 CREATE TABLE cars (
 	car_id CHAR(17) NOT NULL,
-	name VARCHAR(20) COLLATE utf8mb4_unicode_ci NOT NULL,
-	description VARCHAR(1000) COLLATE utf8mb4_unicode_ci NOT NULL,
+	name VARCHAR(20) NOT NULL,
+	description VARCHAR(1000) NOT NULL,
 	km INT NOT NULL,
 	price INT NOT NULL,
 	brand INT NOT NULL,
@@ -203,12 +206,12 @@ BEGIN
 END$$
 DELIMITER ;
 
-DROP PROCEDURE IF EXISTS userSetPrivilege;
+/* DROP PROCEDURE IF EXISTS userSetPrivilege;
 CREATE PROCEDURE userSetPrivilege (
 	IN user_id CHAR(17)
 )
 BEGIN
-
+*/
 DROP PROCEDURE IF EXISTS userSignin;
 DELIMITER $$
 CREATE PROCEDURE userSignin (
@@ -265,14 +268,19 @@ CREATE PROCEDURE searchCar(
 	IN text VARCHAR(128),
 	IN min_km INT,
 	IN max_km INT,
+	IN min_price INT,
+	IN max_price INT,
 	IN categories VARCHAR(128),
 	IN brand VARCHAR(20),
-	IN published TIMESTAMP,
-	IN page INT
+	IN published VARCHAR(20),
+	IN sort VARCHAR(20),
+	IN page INT,
+	IN count BOOLEAN
 )
 BEGIN
 	DECLARE brand_id INT;
-	DECLARE offs INT;
+	DECLARE _offset INT;
+	DECLARE _limit INT;
 	DECLARE ncategories INT;
 	DECLARE categories_regexp VARCHAR(255);
 
@@ -299,17 +307,54 @@ BEGIN
 		SET MESSAGE_TEXT = 'Invalid text search';
 	END IF;
 
-	SET offs = (page-1)*9;
+	IF page <= 0 THEN
+		SIGNAL SQLSTATE '45000'
+		SET MESSAGE_TEXT = 'Invalid page';
+	END IF;
 
-	SELECT c.*, cat.name FROM cars AS c 
+	IF NOT COUNT THEN
+		SET _limit = 9;
+		SET _offset = (page-1)*_limit;
+	ELSE
+		SET _limit = 100000000;
+		SET _offset = 0;
+	END IF;
+
+	CREATE TEMPORARY TABLE car_search_result AS SELECT c.* FROM cars AS c 
 	LEFT JOIN car_category cc ON c.car_id = cc.car_id 
 	LEFT JOIN categories cat ON cc.category_id = cat.category_id
 	WHERE c.name LIKE CONCAT('%', text, '%')
-	AND c.price BETWEEN min_km AND max_km
+	AND c.km BETWEEN min_km AND max_km
+	AND c.price BETWEEN min_price AND max_price
 	AND IF(brand <> '', c.brand = brand_id, 1)
 	AND IF(categories <> '', cat.name REGEXP categories_regexp, 1)
-	AND c.at >= published
-	LIMIT 9 OFFSET offs;
+	AND 
+	CASE published
+		WHEN 'today' THEN c.at >= NOW() - INTERVAL 1 DAY
+		WHEN 'week'  THEN c.at >= NOW() - INTERVAL 1 WEEK
+		WHEN 'month' THEN c.at >= NOW() - INTERVAL 1 MONTH
+		WHEN 'year'  THEN c.at >= NOW() - INTERVAL 1 YEAR
+		WHEN ''      THEN 1
+	END 
+	GROUP BY c.car_id
+	ORDER BY 
+	CASE sort WHEN 'oldest'  THEN c.at END ASC,
+	CASE sort WHEN 'cheaper' THEN c.price END ASC,
+	CASE sort WHEN 'leastkm' THEN c.km END ASC, 
+
+	CASE sort WHEN 'recent'     THEN c.at END DESC,
+	CASE sort WHEN 'expensive'  THEN c.price END DESC,
+	CASE sort WHEN 'mostkm'     THEN c.km END DESC,
+	CASE sort WHEN 'popularity' THEN c.views END DESC
+	LIMIT _limit OFFSET _offset;
+
+	IF NOT count THEN
+		SELECT * FROM car_search_result;
+	ELSE
+		SELECT COUNT(*) AS car_count FROM car_search_result;
+	END IF;
+
+	DROP TABLE car_search_result;
 END$$
 DELIMITER ;
 
@@ -320,4 +365,4 @@ CALL createCar('Audi A3', 'Coche audi A3', 2400, 10000, 'Audi');
 CALL createCar('Audi Q3', 'Coche audi Q3', 1000, 15000, 'Audi');
 CALL createCar('Volvo XC40', 'Coche volvo XC40', 0, 20000, 'Volvo');
 
-CALL searchCar('', 0, 1000000, 'offroad', '', '2020-01-01', 1);
+CALL searchCar('', 0, 1000000, 0, 1000000, 'van', '', '', '', 1, false);

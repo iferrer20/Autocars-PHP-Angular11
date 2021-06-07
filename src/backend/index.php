@@ -12,7 +12,6 @@ error_reporting(E_ALL);
 */
 
 require 'utils/utils.php';
-require 'misc/misc.php';
 $folders_to_include = array('mvc_lib', 'exceptions');
 
 foreach ($folders_to_include as $folder) { 

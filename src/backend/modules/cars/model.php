@@ -114,83 +114,34 @@ class CarsModel extends Model {
         }
         return $published;
     }
-    public function search_car(CarSearch $search) {
-        $categories = $this->get_category_sql($search->categories);
-        $order = $this->get_order_sql($search->order);
-        $published = $this->get_published_sql($search->published);
 
-        $result = $this->db->query(
-            "SELECT cars.id, description, cars.name, b.brand, km, price, at, cat.category FROM cars LEFT JOIN brands b ON b.id = cars.id LEFT JOIN car_category cc ON cars.id = cc.car_id LEFT JOIN categories cat ON cc.category_id = cat.id WHERE category IN ($categories) AND price BETWEEN ? AND ? AND km BETWEEN ? AND ? AND b.brand LIKE ? AND (cars.name LIKE CONCAT('%', ?, '%') OR cars.description LIKE CONCAT('%', ?, '%')) AND at >= $published $order",
-            'iiiisss',
-            $search->min_price, $search->max_price,
-            $search->min_km, $search->max_km,
-            $search->brand,
-            $search->text, $search->text,
-        );
-
-        //$search->limit, ($search->page-1)*$search->limit
-        $count = count($result);
-        $result_arr = array();
-
-        // limit & offset
-        for ($i=(($search->page-1)*$search->limit);$i<$count;$i++) {
-            if ($i >= ((($search->page-1)*$search->limit) + ($search->limit))) {
-                break;
-            }
-            
-            $row = $result[$i];
-            array_push($result_arr, $row);
-        }
-        return $result_arr;
-    }
-    
     public function search_car_count(CarSearch $search) {
-        $categories = $this->get_category_sql($search->categories);
-        $published = $this->get_published_sql($search->published);
+        return $this->search_car($search, true);
+    }
+    public function search_car(CarSearch $search, bool $return_count=false) {
         $result = $this->db->query(
-            "SELECT COUNT(cars.id) as car_count FROM cars LEFT JOIN brands b ON b.id = cars.id LEFT JOIN car_category cc ON cars.id = cc.car_id LEFT JOIN categories cat ON cc.category_id = cat.id WHERE category IN ($categories) AND price BETWEEN ? AND ? AND km BETWEEN ? AND ? AND at > '1990-01-01 00:00:00' AND b.brand LIKE ? AND (cars.name LIKE CONCAT('%', ?, '%') OR cars.description LIKE CONCAT('%', ?, '%')) AND at >= $published",
-            'iiiisss',
-            $search->min_price, $search->max_price,
-            $search->min_km, $search->max_km,
+            'CALL searchCar(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+            'siiiissssii',
+            $search->text,
+            $search->min_km,
+            $search->max_km,
+            $search->min_price,
+            $search->max_price,
+            implode(',', $search->categories),
             $search->brand,
-            $search->text, $search->text
+            $search->published,
+            $search->sort,
+            $search->page,
+            $return_count
         );
-
-        return $result[0]["car_count"];
-    }
-    public function get_categories() {
-        $result = $this->db->query(
-            "SELECT category FROM categories"
-        );
-        $ncat = count($result);
-        $categories = array();
-        for ($i=0;$i<$ncat; $i++) {
-            array_push($categories, $result[$i][0]);
-        }
-
-        return $categories;
-    }
-
-    // UPDATE
-    public function update_car(Car $car) {
-        $result = $this->db->query(
-            'UPDATE cars SET name=?, description=?, price=?, km=?, at=? WHERE id=?',
-            'ssiisi',
-            $car->name, $car->description, $car->price, $car->km, $car->at, $car->id
-        );
-    }
-    // DELETE
-    public function delete_car(int $id) {
-        $this->db->query(
-            'DELETE FROM cars WHERE id=?',
-            'i',
-            $id
-        );
+        if ($return_count) {
+            return $result[0]['car_count'];
+        } 
+        return $result;
     }
     public function trucate_cars_table() {
         $this->db->query('TRUNCATE TABLE cars');
     }
-
     // OTHER
     public function get_car_count() : int {
         $result = $this->db->query('SELECT COUNT(*) total_cars FROM cars')['total_cars'];

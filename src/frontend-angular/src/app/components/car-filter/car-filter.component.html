@@ -91,7 +91,7 @@
             <i class="gg-chevron-down"></i>
         </div>
         <div class="car-filter-modal modal-order" [ngClass]="{'car-filter-modal-opened': orderbyOpened}">
-            <div class="modal-order-el" value="expensive" *ngFor="let sortOp of sortingOps" (click)="setSort(sortOp)" [ngClass]="{'modal-el-selected': sortOp == search.order}">
+            <div class="modal-order-el" value="expensive" *ngFor="let sortOp of sortingOps" (click)="setSort(sortOp)" [ngClass]="{'modal-el-selected': sortOp == search.sort}">
                 {{ 'filters.' + sortOp | translate }}
             </div>
         </div>

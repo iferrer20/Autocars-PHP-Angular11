@@ -2,6 +2,8 @@ version: "3"  # optional since v1.27.0
 services:
   web:
     build: .
+    image: yolanda_web_image
+    container_name: yolanda_web
     ports:
       - "80:80"
     volumes:
@@ -9,15 +11,14 @@ services:
       - ./config/nginx-autocars.conf:/etc/nginx/sites-available/default:ro
       - ./data/img/:/var/www/html/img/:rw
   db:
-    image: mysql:5.7
-    container_name: db
+    image: mysql:latest
+    container_name: yolanda_db
     environment:
       MYSQL_ALLOW_EMPTY_PASSWORD: 1
     ports:
       - "3306:3306"
-    volumes:
-      - ./data/db:/var/lib/mysql
-
+        #volumes:
+      #- ./data/db:/var/lib/mysql
 
         
 #volumes:

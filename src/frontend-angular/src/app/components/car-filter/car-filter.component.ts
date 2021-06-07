@@ -32,9 +32,9 @@ export class CarFilterComponent implements OnInit {
 
   sortingOps: string[] = [
     "expensive",
-    "lesskm",
-    "morekm",
-    "cheap",
+    "leastkm",
+    "mostkm",
+    "cheaper",
     "popularity",
     "recent"
   ];
@@ -79,10 +79,10 @@ export class CarFilterComponent implements OnInit {
   }
 
   setSort(sortOp: string) {
-    if (this.search.order != sortOp) {
-      this.search.order = sortOp;
+    if (this.search.sort != sortOp) {
+      this.search.sort = sortOp;
     } else {
-      delete this.search.order;
+      delete this.search.sort;
     }
     this.orderbyOpened = false;
     this.searchEmit();

@@ -49,7 +49,6 @@ function include_folder($folder) {
             include_once $file;
         }
     }
-    
 }
 function get_client_ip() {
     return $_SERVER['REMOTE_ADDR'];
@@ -57,6 +56,10 @@ function get_client_ip() {
 function get_cookie($cookie) {
     return $_COOKIE[$cookie];
 }
+function get_json($file) {
+    return json_decode(file_get_contents("jsons/" . $file . ".json"));
+}
+
 class res {
     public static bool $replied = false;
     static function redirect($location) {

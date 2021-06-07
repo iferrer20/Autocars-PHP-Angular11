@@ -13,7 +13,7 @@ export interface CarSearch {
   min_price: number,
   max_price: number,
   max_km?: number,
-  order?: string,
+  sort?: string,
   published?: string,
   brand?: string,
   page?: number
