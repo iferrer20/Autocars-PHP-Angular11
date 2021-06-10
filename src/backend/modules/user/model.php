@@ -33,9 +33,11 @@ class UserModel extends Model {
             'SELECT * FROM users WHERE user_id = ?',
             's',
             $uid
-        );
+        )[0];
+        $result['password'] = '';
+        $result['username'] = $result['username'] ?? '';
         $user = new User();
-        Utils\array_to_obj($result[0], $user);
+        Utils\array_to_obj($result, $user);
         return $user;
     }
 

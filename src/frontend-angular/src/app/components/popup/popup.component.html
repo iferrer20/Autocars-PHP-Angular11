@@ -1,0 +1,14 @@
+<div class="popup-bottom" [ngClass]="{'popup-bottom-hidden': !displayed}">
+    <div class="popup">
+        <div>{{text | translate}}</div>
+        <div class="popup-buttons">
+            <div *ngFor="let button of buttons" 
+            class="popup-button" 
+            [style.background]="button.background" 
+            (click)="button.close ? close() : ''" 
+            (click)="button.accept ? accept() : ''">
+                {{button.text | translate}}
+            </div>
+        </div>
+    </div>
+</div>

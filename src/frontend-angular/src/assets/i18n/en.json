@@ -31,5 +31,12 @@
         "cheap": "Most cheaper",
         "popular": "Popularity",
         "recent": "Recent cars"
-    }
+    },
+    "popup": {
+        "needlogin": "If you want set favorite this element, you need login"
+    },
+    "login": "Login",
+    "cancel": "Cancel",
+    "signin": "Signin",
+    "signup": "Signup"
 }

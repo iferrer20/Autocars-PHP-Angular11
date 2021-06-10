@@ -1,16 +1,8 @@
+import { PopupService } from './../../services/popup.service';
+import { UserService } from './../../services/user.service';
+import { ApiConnectorService } from './../../services/api-connector.service';
+import { Car } from './../../classes/car';
 import { Component, Input, OnInit } from '@angular/core';
-
-export interface Car {
-  id: number,
-  price: number,
-  name: string,
-  description: string,
-  brand: number,
-  category: string,
-  km: number,
-  views: number,
-  at: string
-}
 
 @Component({
   selector: 'app-car-element',
@@ -19,19 +11,23 @@ export interface Car {
 })
 export class CarElementComponent implements OnInit {
 
-  @Input() car: Car;
-  constructor() {
-    this.car = {
-      id: 0,
-      price: 0,
-      name: '',
-      description: '',
-      brand: 0,
-      category: '',
-      km: 0,
-      views: 0,
-      at: ''
+  @Input() car!: Car;
+  constructor(private api: ApiConnectorService, private user: UserService, private popup: PopupService) {
+    
+  }
+
+  toggleFav(): void {
+    if (this.user.isLogged()) {
+      this.car.favorite = !this.car.favorite;
+      if (this.car.favorite) {
+        this.api.setFavoriteCar(this.car.car_id);
+      } else {
+        this.api.unsetFavoriteCar(this.car.car_id);
+      }
+    } else {
+      this.popup.needLogin();
     }
+    
   }
 
   ngOnInit(): void {

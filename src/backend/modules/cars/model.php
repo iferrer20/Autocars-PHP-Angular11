@@ -59,69 +59,13 @@ class CarsModel extends Model {
         
         return $result;
     } 
-    private function get_order_sql($order) {
-        switch ($order) {
-            default:
-            case 'recent':
-                $order = 'ORDER BY cars.at DESC';
-                break;
-            case 'old':
-                $order = 'ORDER BY cars.at ASC';
-                break;
-            case 'expensive':
-                $order = 'ORDER BY price DESC';
-                break;
-            case 'cheap':
-                $order = 'ORDER BY price ASC';
-                break;
-            case 'popular':
-                $order = 'ORDER BY views DESC';
-                break;
-            case 'lesskm':
-                $order = 'ORDER BY km ASC';
-                break;
-            case 'morekm':
-                $order = 'ORDER BY km DESC';
-                break;
-        }
-        return $order;
+    public function search_car_count(CarSearch $search, string $user_id) {
+        return $this->search_car($search, $user_id, true);
     }
-    private function get_category_sql($cat) {
-        $categories = "category";
-        if (!empty($cat)) {
-            $categories = '\'' . join('\', \'', array_map("addslashes", $cat)) . '\'';
-        }
-        return $categories;
-    }
-    private function get_published_sql($published) {
-        switch ($published) {
-            default:
-            case 'anytime':
-                $published = '\'1990-01-01 00:00:00\'';
-                break;
-            case 'today':
-                $published = 'NOW() - INTERVAL 1 DAY';
-                break;
-            case 'week':
-                $published = 'NOW() - INTERVAL 1 WEEK';
-                break;
-            case 'month':
-                $published = 'NOW() - INTERVAL 1 MONTH';
-                break;
-            case 'year':
-                $published = 'NOW() - INTERVAL 1 YEAR';
-                break;
-        }
-        return $published;
-    }
-
-    public function search_car_count(CarSearch $search) {
-        return $this->search_car($search, true);
-    }
-    public function search_car(CarSearch $search, bool $return_count=false) {
+    public function search_car(CarSearch $search, string $user_id, bool $return_count=false) {
         $result = $this->db->query(
-            'CALL searchCar(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-            'siiiissssii',
+            'CALL searchCar(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+            'siiiisssssii',
             $search->text,
             $search->min_km,
             $search->max_km,
@@ -131,14 +75,33 @@ class CarsModel extends Model {
             $search->brand,
             $search->published,
             $search->sort,
-            $search->page,
-            $return_count
+            $user_id,
+            $return_count ? 0 : $search->page,
+            2
         );
         if ($return_count) {
             return $result[0]['car_count'];
         } 
         return $result;
     }
+
+    public function set_favorite_car(string $user_id, string $car_id) {
+        $this->db->query(
+            'CALL setFavoriteCar(?, ?)',
+            'ss',
+            $user_id,
+            $car_id
+        );
+    }
+    public function unset_favorite_car(string $user_id, string $car_id) {
+        $this->db->query(
+            'CALL unsetFavoriteCar(?, ?)',
+            'ss',
+            $user_id,
+            $car_id
+        );
+    }
+
     public function trucate_cars_table() {
         $this->db->query('TRUNCATE TABLE cars');
     }

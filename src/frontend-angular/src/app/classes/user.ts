@@ -11,8 +11,10 @@ export interface UserSignup {
 }
 
 export interface UserData {
+    user_id: string,
     username: string,
-    email: string
+    email: string,
+    expires: number
 }
 
 export interface UserSocialSignin {

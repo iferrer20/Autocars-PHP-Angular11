@@ -46,7 +46,7 @@ function include_folder($folder) {
     if (is_dir($folder)) {
         $files = glob($folder . '/*.php');
         foreach ($files as $file) {
-            include_once $file;
+            require_once $file;
         }
     }
 }

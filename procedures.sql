@@ -274,13 +274,13 @@ CREATE PROCEDURE searchCar(
 	IN brand VARCHAR(20),
 	IN published VARCHAR(20),
 	IN sort VARCHAR(20),
+	IN user_id CHAR(17),
 	IN page INT,
-	IN count BOOLEAN
+	IN _limit INT
 )
 BEGIN
 	DECLARE brand_id INT;
 	DECLARE _offset INT;
-	DECLARE _limit INT;
 	DECLARE ncategories INT;
 	DECLARE categories_regexp VARCHAR(255);
 
@@ -307,22 +307,17 @@ BEGIN
 		SET MESSAGE_TEXT = 'Invalid text search';
 	END IF;
 
-	IF page <= 0 THEN
+	SET _offset = (page-1)*_limit;
+
+	IF page < 0 THEN
 		SIGNAL SQLSTATE '45000'
 		SET MESSAGE_TEXT = 'Invalid page';
 	END IF;
 
-	IF NOT COUNT THEN
-		SET _limit = 9;
-		SET _offset = (page-1)*_limit;
-	ELSE
-		SET _limit = 100000000;
-		SET _offset = 0;
-	END IF;
-
-	CREATE TEMPORARY TABLE car_search_result AS SELECT c.* FROM cars AS c 
+	CREATE TEMPORARY TABLE car_search_result AS SELECT c.*, f.car_id IS NOT NULL AS favorite FROM cars AS c 
 	LEFT JOIN car_category cc ON c.car_id = cc.car_id 
 	LEFT JOIN categories cat ON cc.category_id = cat.category_id
+	LEFT JOIN favorites f ON user_id <> '' AND c.car_id = f.car_id AND user_id = f.user_id
 	WHERE c.name LIKE CONCAT('%', text, '%')
 	AND c.km BETWEEN min_km AND max_km
 	AND c.price BETWEEN min_price AND max_price
@@ -336,25 +331,72 @@ BEGIN
 		WHEN 'year'  THEN c.at >= NOW() - INTERVAL 1 YEAR
 		WHEN ''      THEN 1
 	END 
-	GROUP BY c.car_id
-	ORDER BY 
-	CASE sort WHEN 'oldest'  THEN c.at END ASC,
-	CASE sort WHEN 'cheaper' THEN c.price END ASC,
-	CASE sort WHEN 'leastkm' THEN c.km END ASC, 
+	GROUP BY c.car_id;
 
-	CASE sort WHEN 'recent'     THEN c.at END DESC,
-	CASE sort WHEN 'expensive'  THEN c.price END DESC,
-	CASE sort WHEN 'mostkm'     THEN c.km END DESC,
-	CASE sort WHEN 'popularity' THEN c.views END DESC
-	LIMIT _limit OFFSET _offset;
+	IF page > 0 THEN
+		SELECT * FROM car_search_result AS c
+		ORDER BY 
+			CASE sort WHEN 'oldest'  THEN c.at END ASC,
+			CASE sort WHEN 'cheaper' THEN c.price END ASC,
+			CASE sort WHEN 'leastkm' THEN c.km END ASC, 
 
-	IF NOT count THEN
-		SELECT * FROM car_search_result;
+			CASE sort WHEN 'recent'     THEN c.at END DESC,
+			CASE sort WHEN 'expensive'  THEN c.price END DESC,
+			CASE sort WHEN 'mostkm'     THEN c.km END DESC,
+			CASE sort WHEN 'popularity' THEN c.views END DESC
+		LIMIT _limit OFFSET _offset;
 	ELSE
 		SELECT COUNT(*) AS car_count FROM car_search_result;
 	END IF;
 
 	DROP TABLE car_search_result;
+END$$
+DELIMITER ;
+
+DROP PROCEDURE IF EXISTS setFavoriteCar;
+DELIMITER $$
+CREATE PROCEDURE setFavoriteCar(
+	IN user_id CHAR(17),
+	IN car_id CHAR(17)
+)
+BEGIN
+	DECLARE EXIT HANDLER FOR 1062
+	BEGIN
+		SIGNAL SQLSTATE '45000' 
+		SET MESSAGE_TEXT = 'Car already is in favorites';
+	END;
+	DECLARE EXIT HANDLER FOR 1452
+	BEGIN
+		SIGNAL SQLSTATE '45000' 
+		SET MESSAGE_TEXT = 'Car do not exists';
+	END;
+	INSERT INTO favorites VALUES (user_id, car_id);
+END$$
+DELIMITER ;
+
+DROP PROCEDURE IF EXISTS unsetFavoriteCar;
+DELIMITER $$
+CREATE PROCEDURE unsetFavoriteCar(
+	IN user_id CHAR(17),
+	IN car_id CHAR(17)
+)
+BEGIN
+	DELETE FROM favorites AS f WHERE f.user_id = user_id AND f.car_id = car_id;
+	
+	IF ROW_COUNT() = 0 THEN
+		SIGNAL SQLSTATE '45000' 
+		SET MESSAGE_TEXT = 'Car is not in favorites';
+	END IF;
+END$$
+DELIMITER ;
+
+DROP PROCEDURE IF EXISTS getCart;
+DELIMITER $$
+CREATE PROCEDURE getCart(
+	IN user_id CHAR(17)
+)
+BEGIN
+	SELECT * FROM cart AS c WHERE c.user_id = user_id;
 END$$
 DELIMITER ;
 
@@ -365,4 +407,4 @@ CALL createCar('Audi A3', 'Coche audi A3', 2400, 10000, 'Audi');
 CALL createCar('Audi Q3', 'Coche audi Q3', 1000, 15000, 'Audi');
 CALL createCar('Volvo XC40', 'Coche volvo XC40', 0, 20000, 'Volvo');
 
-CALL searchCar('', 0, 1000000, 0, 1000000, 'van', '', '', '', 1, false);
+CALL searchCar('', 0, 1000000, 0, 1000000, '', '', '', 'expensive', '', 1, 2);

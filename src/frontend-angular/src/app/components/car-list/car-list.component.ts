@@ -1,6 +1,6 @@
+import { Car } from './../../classes/car';
 import { ApiConnectorService } from './../../services/api-connector.service';
 import { Component, OnInit } from '@angular/core';
-import { Car } from '../car-element/car-element.component';
 
 export interface CarList {
   cars: Car[],

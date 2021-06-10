@@ -4,6 +4,7 @@ import { CarList, CarSearch } from './../components/car-list/car-list.component'
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { UserService } from './user.service';
 
 
 @Injectable({
@@ -21,14 +22,25 @@ export class ApiConnectorService {
       }).toPromise();
       return content;
     } catch(e) {
+      console.log(e);
       throw e.error.error;
     }
   }
 
+  //CAR
   searchCar(search: CarSearch): Promise<CarList> {
     return this.req<CarList>('cars/search', 'POST', search);
   }
 
+  setFavoriteCar(car_id: number) {
+    return this.req<CarList>('cars/favorite', 'PUT', {car_id: car_id})
+  }
+
+  unsetFavoriteCar(car_id: number) {
+    return this.req<CarList>('cars/favorite', 'DELETE', {car_id: car_id})
+  }
+
+  //USER
   userSocialSignin(social: UserSocialSignin) {
     return this.req('user/social_signin', 'POST', social);
   }
@@ -38,11 +50,10 @@ export class ApiConnectorService {
   }
 
   userSignup(userSignup: UserSignup) {
-    //if (userSignup.email )
-    if (userSignup.password != userSignup.retypePassword) {
-      throw {field: "retypePassword", str: "mismatchPasswords"};
-    }
-    
     return this.req('user/signup', 'POST', userSignup);
   }
+
+  
+
+
 }

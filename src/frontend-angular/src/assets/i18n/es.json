@@ -31,5 +31,12 @@
         "cheap": "Mas barato",
         "popular": "Popularidad",
         "recent": "Mas reciente"
-    }
+    },
+    "popup": {
+        "needlogin": "Necesitas estar logeado"
+    },
+    "login": "Acceder",
+    "signin": "Acceder",
+    "signup": "Registrarse",
+    "cancel": "Cancelar"
 }

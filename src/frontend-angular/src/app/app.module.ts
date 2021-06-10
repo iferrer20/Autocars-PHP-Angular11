@@ -25,6 +25,7 @@ import { environment } from 'src/environments/environment';
 import firebase from 'firebase/app';
 import { FirebaseUIModule, firebaseui } from 'firebaseui-angular';
 import { FormsModule } from '@angular/forms';
+import { PopupComponent } from './components/popup/popup.component';
 
 const firebaseUiAuthConfig: firebaseui.auth.Config = {
   signInFlow: 'popup',
@@ -51,7 +52,8 @@ const firebaseUiAuthConfig: firebaseui.auth.Config = {
     CarFilterComponent,
     CarElementComponent,
     SigninComponent,
-    SignupComponent
+    SignupComponent,
+    PopupComponent
   ],
   imports: [
     BrowserModule,

@@ -17,7 +17,7 @@ export class SigninComponent implements OnInit, OnDestroy {
 
   socialSubscription: Subscription;
   userSignin: UserSignin;
-  constructor(public user: UserService, private api: ApiConnectorService, private angularfire: AngularFireAuth, public router: Router) {
+  constructor(public user: UserService, private angularfire: AngularFireAuth, public router: Router) {
     this.socialSubscription = this.angularfire.idToken.subscribe({
       next: (idToken: any) => {
         if (idToken) {
@@ -37,10 +37,10 @@ export class SigninComponent implements OnInit, OnDestroy {
     };
     this.angularfire.signOut();
 
-    await this.api.userSocialSignin(social);
+    await this.user.socialSignin(social);
   }
   onSignin() {
-    this.api.userSignin(this.userSignin);
+    this.user.signin(this.userSignin);
   }
   ngOnInit(): void {
     this.angularfire.signOut();

@@ -126,7 +126,7 @@ class App {
                 switch ($attribute->getName()) {
                     case 'middlewares':
                         $fname = 'Middlewares\\' . $argument;
-                        ($fname)($controller);
+                        ($fname)();
                         break;
                     case 'utils':
                         require 'utils/' . $argument . '.php';

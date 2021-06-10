@@ -13,6 +13,4 @@ class CarSearch {
     public int $page = 1;
 }
 
-
-
 ?>

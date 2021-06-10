@@ -11,16 +11,12 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 */
 
-require 'utils/utils.php';
-$folders_to_include = array('mvc_lib', 'exceptions');
+require_once 'utils/utils.php';
+$folders_to_include = array('mvc_lib', 'exceptions', 'middlewares');
 
 foreach ($folders_to_include as $folder) { 
     Utils\include_folder($folder);
 }
-
-
-
-require 'middlewares/middlewares.php';
 
 if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
     Utils\res::ok();
