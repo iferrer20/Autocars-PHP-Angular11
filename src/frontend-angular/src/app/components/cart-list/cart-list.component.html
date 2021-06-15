@@ -1,0 +1,2 @@
+<app-cart-element *ngFor="let cartrow of cartService.cart.rows | keyvalue" [carCart]="cartrow.value"></app-cart-element>
+<div class="total-price">Total price: {{cartService.cart.totalPrice | number}} €</div>

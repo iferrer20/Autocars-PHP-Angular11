@@ -1,6 +1,6 @@
-import { CarSearch } from './../car-list/car-list.component';
 import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { Options } from '@angular-slider/ngx-slider';
+import { CarSearch } from 'src/app/classes/car';
 
 @Component({
   selector: 'app-car-filter',

@@ -110,7 +110,7 @@ DROP TABLE IF EXISTS cart;
 CREATE TABLE cart (
 	user_id CHAR(17) NOT NULL,
 	car_id CHAR(17) NOT NULL,
-	quantity INT NOT NULL,
+	qty INT NOT NULL,
 	FOREIGN KEY (user_id) REFERENCES users(user_id),
 	FOREIGN KEY (car_id) REFERENCES cars(car_id),
 	PRIMARY KEY (user_id, car_id)
@@ -173,8 +173,8 @@ BEGIN
 		GET DIAGNOSTICS CONDITION 1 err = MESSAGE_TEXT;
 		SET err = REPLACE(SUBSTRING_INDEX(err, '\'', -2), '\'', '');
 		CASE err
-			WHEN 'email' THEN SET errstr = 'Email already in use';
-			WHEN 'username' THEN SET errstr = 'Username already in use';
+			WHEN 'users.email' THEN SET errstr = 'Email already in use';
+			WHEN 'users.username' THEN SET errstr = 'Username already in use';
 		END CASE;
 
 		SIGNAL SQLSTATE '45000' 
@@ -397,6 +397,75 @@ CREATE PROCEDURE getCart(
 )
 BEGIN
 	SELECT * FROM cart AS c WHERE c.user_id = user_id;
+END$$
+DELIMITER ;
+
+DROP PROCEDURE IF EXISTS addToCart;
+DELIMITER $$
+CREATE PROCEDURE addToCart(
+	IN user_id CHAR(17),
+	IN car_id CHAR(17),
+	IN qty INT
+)
+BEGIN
+	DECLARE EXIT HANDLER FOR 1452
+	BEGIN
+		SIGNAL SQLSTATE '45000' 
+		SET MESSAGE_TEXT = 'Car do not exists';
+	END;
+
+	IF qty < 1 THEN
+		SIGNAL SQLSTATE '45000'
+		SET MESSAGE_TEXT = 'Invalid quantity';
+	END IF;
+
+	IF NOT EXISTS(SELECT car_id FROM cart AS c WHERE c.user_id = user_id AND c.car_id = car_id) THEN
+		INSERT INTO cart VALUES (user_id, car_id, qty);
+	ELSE
+		UPDATE cart AS c SET c.qty = qty WHERE c.user_id = user_id AND c.car_id = car_id LIMIT 1;
+	END IF;
+END$$
+DELIMITER ;
+
+DROP PROCEDURE IF EXISTS delFromCart;
+DELIMITER $$
+CREATE PROCEDURE delFromCart(
+	IN user_id CHAR(17),
+	IN car_id CHAR(17)
+)
+BEGIN
+	DELETE FROM cart AS c WHERE c.user_id = user_id AND c.car_id = car_id LIMIT 1;
+	IF ROW_COUNT() = 0 THEN
+		SIGNAL SQLSTATE '45000'
+		SET MESSAGE_TEXT = 'The car is not in cart';
+	END IF;
+	
+END$$
+DELIMITER ;
+
+DROP PROCEDURE IF EXISTS delFromCart;
+DELIMITER $$
+CREATE PROCEDURE delFromCart(
+	IN user_id CHAR(17),
+	IN car_id CHAR(17)
+)
+BEGIN
+	DELETE FROM cart AS c WHERE c.user_id = user_id AND c.car_id = car_id LIMIT 1;
+	IF ROW_COUNT() = 0 THEN
+		SIGNAL SQLSTATE '45000'
+		SET MESSAGE_TEXT = 'The car is not in cart';
+	END IF;
+	
+END$$
+DELIMITER ;
+
+DROP PROCEDURE IF EXISTS getCart;
+DELIMITER $$
+CREATE PROCEDURE getCart(
+	IN user_id CHAR(17)
+)
+BEGIN
+	SELECT cars.*, c.qty FROM cart AS c INNER JOIN cars ON cars.car_id = c.car_id WHERE c.user_id = user_id;
 END$$
 DELIMITER ;
 

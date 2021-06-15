@@ -1,3 +1,4 @@
+import { CartComponent } from './pages/cart/cart.component';
 import { AuthGuard } from './guards/auth.guard';
 import { ShopComponent } from './pages/shop/shop.component';
 import { NotFoundComponent } from './pages/not-found/not-found.component';
@@ -14,6 +15,7 @@ const routes: Routes = [
   { path: 'account', component: AccountComponent, canActivate: [AuthGuard] },
   { path: 'signin', component: SigninComponent },
   { path: 'signup', component: SignupComponent},
+  { path: 'cart', component: CartComponent },
   { path: '**', component: NotFoundComponent }
 ];
 

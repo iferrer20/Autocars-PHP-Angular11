@@ -1,8 +1,11 @@
+import { CartService } from './../../services/cart.service';
+import { EventBusService } from './../../services/event-bus.service';
 import { PopupService } from './../../services/popup.service';
 import { UserService } from './../../services/user.service';
 import { ApiConnectorService } from './../../services/api-connector.service';
 import { Car } from './../../classes/car';
 import { Component, Input, OnInit } from '@angular/core';
+import { EventData } from 'src/app/classes/eventData';
 
 @Component({
   selector: 'app-car-element',
@@ -12,7 +15,10 @@ import { Component, Input, OnInit } from '@angular/core';
 export class CarElementComponent implements OnInit {
 
   @Input() car!: Car;
-  constructor(private api: ApiConnectorService, private user: UserService, private popup: PopupService) {
+  constructor(private api: ApiConnectorService, 
+              private popup: PopupService,
+              private cart: CartService,
+              private user: UserService) {
     
   }
 
@@ -28,6 +34,21 @@ export class CarElementComponent implements OnInit {
       this.popup.needLogin();
     }
     
+  }
+
+  async addToCart() {
+    
+    let resp = await this.popup.component.show("cart.askaddtocart", [
+      {text: 'yes', background: 'black', accept: true},
+      {text: 'no', background: 'black', close: true}
+    ]);
+
+    if (resp) {
+      if (this.user.isLogged()) {
+      }
+      
+      this.cart.addCar(this.car);
+    }
   }
 
   ngOnInit(): void {

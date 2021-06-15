@@ -4,7 +4,20 @@
     align-items: center;
     flex-direction: column;
 } */
+.car-list-box {
+    margin-bottom: auto;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+:host {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
 .car-list {
+    margin-top: auto;
     display: flex;
     position: relative;
     justify-content: center; 
@@ -19,11 +32,11 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    margin-top: auto;
 }
 .car-list-pagination-el {
     width: 50px;
     height: 50px;
-    padding: 10px;
     background-color: #fafafa;
     box-shadow: 0px 0px 13px 0px rgba(0,0,0,0.75);
     color: black;

@@ -26,6 +26,9 @@ import firebase from 'firebase/app';
 import { FirebaseUIModule, firebaseui } from 'firebaseui-angular';
 import { FormsModule } from '@angular/forms';
 import { PopupComponent } from './components/popup/popup.component';
+import { CartComponent } from './pages/cart/cart.component';
+import { CartElementComponent } from './components/cart-element/cart-element.component';
+import { CartListComponent } from './components/cart-list/cart-list.component';
 
 const firebaseUiAuthConfig: firebaseui.auth.Config = {
   signInFlow: 'popup',
@@ -53,7 +56,10 @@ const firebaseUiAuthConfig: firebaseui.auth.Config = {
     CarElementComponent,
     SigninComponent,
     SignupComponent,
-    PopupComponent
+    PopupComponent,
+    CartComponent,
+    CartElementComponent,
+    CartListComponent
   ],
   imports: [
     BrowserModule,

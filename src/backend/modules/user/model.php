@@ -1,7 +1,7 @@
 <?php
 
 class UserModel extends Model {
-    public function signin(User $user) {
+    public function signin(UserSignin $user) {
         $result = $this->db->query(
             'CALL userSignin(?, ?)',
             'ss',
@@ -10,7 +10,7 @@ class UserModel extends Model {
         );
         return $result[0]['user_id'];
     }
-    public function signup(User $user) {
+    public function signup(UserSignup $user) {
         $result = $this->db->query(
             'CALL userSignup(?, ?, ?)',
             'sss',

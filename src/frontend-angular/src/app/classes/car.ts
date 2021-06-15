@@ -1,5 +1,5 @@
 export interface Car {
-    car_id: number,
+    car_id: string,
     price: number,
     name: string,
     description: string,
@@ -8,5 +8,27 @@ export interface Car {
     km: number,
     views: number,
     at: string,
-    favorite: boolean
+    favorite?: boolean
+}
+
+export interface CarCart {
+    qty: number,
+    car: Car
+}
+
+export interface CarList {
+    cars: Car[],
+    pages: number
+}
+  
+export interface CarSearch {
+    text?: string,
+    categories: string[],
+    min_price: number,
+    max_price: number,
+    max_km?: number,
+    sort?: string,
+    published?: string,
+    brand?: string,
+    page?: number
 }

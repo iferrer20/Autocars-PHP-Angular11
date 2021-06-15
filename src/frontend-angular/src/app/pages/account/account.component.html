@@ -1,1 +1,5 @@
-<p>account works!</p>
+<div class="account-info" *ngIf="user.user">
+    <div>Username: {{user.user.username == '' ? 'none' : user.user.username}}</div>
+    <div>Email: {{user.user.email}}</div>
+    <div class="logout-button" (click)="logout()">Logout</div>
+</div>

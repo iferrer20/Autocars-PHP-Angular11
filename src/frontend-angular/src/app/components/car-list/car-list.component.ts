@@ -1,23 +1,6 @@
-import { Car } from './../../classes/car';
+import { Car, CarList, CarSearch } from './../../classes/car';
 import { ApiConnectorService } from './../../services/api-connector.service';
 import { Component, OnInit } from '@angular/core';
-
-export interface CarList {
-  cars: Car[],
-  pages: number
-}
-
-export interface CarSearch {
-  text?: string,
-  categories: string[],
-  min_price: number,
-  max_price: number,
-  max_km?: number,
-  sort?: string,
-  published?: string,
-  brand?: string,
-  page?: number
-}
 
 @Component({
   selector: 'app-car-list',
@@ -26,15 +9,20 @@ export interface CarSearch {
 })
 export class CarListComponent implements OnInit {
 
-  search: CarSearch = {
-    page: 1,
-    categories: [],
-    min_price: 500,
-    max_price: 20000
-  };
-  carlist!: CarList;
+  search: CarSearch;
+  carlist: CarList;
 
   constructor(private api: ApiConnectorService) {
+    this.carlist = {
+      cars: [],
+      pages: 1
+    }
+    this.search = {
+      page: 1,
+      categories: [],
+      min_price: 500,
+      max_price: 20000
+    };
   }
 
   

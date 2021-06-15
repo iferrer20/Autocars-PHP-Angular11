@@ -1,0 +1,14 @@
+
+<div class="cart-element">
+    <div class="cart-element-image"></div>
+    <div class="cart-element-qty">
+        <button (click)="dec()" [disabled]="disabledQtyButtons">-</button>
+        <div>{{carCart.qty}}</div>
+        <button (click)="inc()" [disabled]="disabledQtyButtons">+</button>
+    </div>
+    <div class="cart-element-name">{{carCart.car.name}}</div>
+    <div class="cart-element-price">{{carCart.car.price*carCart.qty}} €</div>
+    <div class="cart-element-close">
+        <i class="gg-close" (click)="delete()"></i>
+    </div>
+</div>

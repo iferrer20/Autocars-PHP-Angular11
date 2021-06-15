@@ -36,7 +36,7 @@ class CarsController extends Controller {
     #[middlewares('check_jwt_optional')]
     public function search_post(CarSearch $search) {
         $cars = $this->model->search_car($search, Client::$jwt_data['user_id']);
-        $pages = $this->model->search_car_count($search, Client::$jwt_data['user_id'])/2;
+        $pages = $this->model->search_car_count($search, Client::$jwt_data['user_id'])/4;
         $pages += is_float($pages) ? 1 : 0;
         $pages = intval($pages);
 

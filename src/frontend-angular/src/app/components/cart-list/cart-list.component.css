@@ -3,6 +3,10 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: calc(100% - 60px);
-    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    width: 100%;
+}
+
+.total-price {
+    font-weight: bold;
+    font-size: 20pt;
 }

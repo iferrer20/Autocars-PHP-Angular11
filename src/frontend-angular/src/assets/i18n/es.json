@@ -26,10 +26,10 @@
         "year": "Este año",
         "orderby": "Ordenar por",
         "expensive": "Mas caro",
-        "morekm": "Mas kilometraje",
-        "lesskm": "Menos kilometraje",
-        "cheap": "Mas barato",
-        "popular": "Popularidad",
+        "mostkm": "Mas kilometraje",
+        "leastkm": "Menos kilometraje",
+        "cheaper": "Mas barato",
+        "popularity": "Popularidad",
         "recent": "Mas reciente"
     },
     "popup": {
@@ -38,5 +38,12 @@
     "login": "Acceder",
     "signin": "Acceder",
     "signup": "Registrarse",
-    "cancel": "Cancelar"
+    "cancel": "Cancelar",
+    "car": {
+        "buy": "Comprar"
+    },
+    "cart": {
+        "askaddtocart": "Quieres añadir el producto al carrito?"
+    }
+
 }

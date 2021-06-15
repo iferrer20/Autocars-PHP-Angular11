@@ -77,7 +77,7 @@ class CarsModel extends Model {
             $search->sort,
             $user_id,
             $return_count ? 0 : $search->page,
-            2
+            4
         );
         if ($return_count) {
             return $result[0]['car_count'];

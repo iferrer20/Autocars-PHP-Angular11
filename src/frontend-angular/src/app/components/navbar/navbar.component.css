@@ -4,7 +4,7 @@
 
 */
 .header {
-    background-color: #fd5b5b;
+    background-color: #242424;
     width: 100%;
     display: flex;
     padding: 10px;
@@ -33,13 +33,13 @@
 }
 .header-menu > div {
     font-size: 18pt;
-    width: 100px;
+    min-width: 100px;
     padding: 10px;
     text-align: center;
 }
 
-.header-menu div:hover {
-    background-color: #c54444;
+.header-menu > div:hover {
+    background-color: #505050;
     cursor: pointer;
     border-radius: 10px;
 }
@@ -58,7 +58,7 @@
     display: block;
     position: absolute;
     box-sizing: border-box;
-    background-color: #fd5b5b;
+    background-color: #242424;
     border-radius: 7px;
     padding: 10px;
     width: 100%;
@@ -66,4 +66,75 @@
 .header-separator {
     height: 60px;
     width: 100%;
+}
+
+div.cart-icon {
+    min-width: 40px !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.gg-shopping-cart {
+    display: block;
+    box-sizing: border-box;
+    position: relative;
+    transform: scale(var(--ggs,1));
+    width: 20px;
+    height: 21px;
+    background:
+        linear-gradient(
+            to left,currentColor 12px,
+            transparent 0)
+            no-repeat -1px 6px/18px 2px,
+        linear-gradient(
+            to left,currentColor 12px,
+            transparent 0)
+            no-repeat 6px 14px/11px 2px,
+        linear-gradient(
+            to left,currentColor 12px,
+            transparent 0)
+            no-repeat 0 2px/4px 2px,
+        radial-gradient(
+            circle,currentColor 60%,
+            transparent 40%)
+            no-repeat 12px 17px/4px 4px,
+        radial-gradient(
+            circle,currentColor 60%,
+            transparent 40%)
+            no-repeat 6px 17px/4px 4px
+}
+.gg-shopping-cart::after,
+.gg-shopping-cart::before {
+    content: "";
+    display: block;
+    position: absolute;
+    box-sizing: border-box;
+    width: 2px;
+    height: 14px;
+    background: currentColor;
+    top: 2px;
+    left: 4px;
+    transform: skew(12deg)
+}
+.gg-shopping-cart::after {
+    height: 10px;
+    top: 6px;
+    left: 16px;
+    transform: skew(-12deg)
+}
+
+.cart-count {
+    background-color: red;
+    border-radius: 50%;
+    width: 15px;
+    height: 15px;
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    font-size: 8pt;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }

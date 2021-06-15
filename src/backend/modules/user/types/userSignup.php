@@ -1,11 +1,9 @@
 <?php
 
-class User {
-    public string $user_id;
+class UserSignup {
     public string $username;
     public string $email;
     public string $password;
-    
 }
 
 

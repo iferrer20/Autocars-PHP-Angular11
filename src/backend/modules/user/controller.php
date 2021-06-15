@@ -10,7 +10,7 @@ class UserController extends Controller {
         parent::__construct();
     }
 
-    private function give_access(User $user) {
+    private function give_access($user) {
         $expires = strtotime("+1 week");
         $token = JWT::encode([
             'user_id' => $user->user_id,
@@ -31,12 +31,14 @@ class UserController extends Controller {
     #[utils('jwt')]
     public function signin_post(UserSignin $user) {
         $uid = $this->model->signin($user);
+        $user = $this->model->get_user($uid);
         $this->give_access($user);
     }
     
     #[utils('jwt')]
-    public function signup_post(User $user) {
+    public function signup_post(UserSignup $user) {
         $uid = $this->model->signup($user);
+        $user = $this->model->get_user($uid);
         $this->give_access($user);
     }
     
@@ -55,7 +57,10 @@ class UserController extends Controller {
             'username' => $user->username,
             'email' => $user->email
         ]);
-        
+    }
+    #[middlewares('check_jwt')]
+    public function logout_get() {
+        setcookie('token', "", time() - 3600, '/', 'localhost', false, true); // Remove token
     }
     
 }

@@ -1,7 +1,9 @@
 div[comp-key="carFilter"] {
     height: inherit;
 }
-
+:host {
+    margin-bottom: auto;
+}
 .car-filter {
     width: 500px;
     padding: 10px;

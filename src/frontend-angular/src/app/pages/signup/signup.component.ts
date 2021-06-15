@@ -1,7 +1,7 @@
-import { ApiConnectorService } from './../../services/api-connector.service';
 import { UserSignup } from './../../classes/user';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-signup',
@@ -17,7 +17,7 @@ export class SignupComponent implements OnInit {
     retypePassword: "⠀"
   }
 
-  constructor(private api: ApiConnectorService, public router: Router) {
+  constructor(private user: UserService, public router: Router) {
     this.userSignup = {
       email: "",
       username: "",
@@ -32,7 +32,7 @@ export class SignupComponent implements OnInit {
   async onSignup() {
     this.verifySignup();
     try {
-      await this.api.userSignup(this.userSignup);
+      await this.user.signup(this.userSignup);
     } catch(e) {
       console.log(e);
     }

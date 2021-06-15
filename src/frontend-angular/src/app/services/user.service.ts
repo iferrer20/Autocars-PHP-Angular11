@@ -1,7 +1,7 @@
 import { Router } from '@angular/router';
 import { ApiConnectorService } from './api-connector.service';
-import { UserData, UserSocialSignin, UserSignin, UserSignup } from './../classes/user';
-import { Injectable } from '@angular/core';
+import { UserSocialSignin, UserSignin, UserSignup, User } from './../classes/user';
+import { Injectable, SimpleChanges } from '@angular/core';
 
 @Injectable({
   providedIn: 'root'
@@ -9,18 +9,18 @@ import { Injectable } from '@angular/core';
 export class UserService {
 
   private logged!: boolean;
-  public userData!: UserData | null;
+  public user!: User | null;
 
   constructor(private api: ApiConnectorService, private router: Router) {
-    let dataJson = localStorage.getItem("user_data");
+    let dataJson = localStorage.getItem("user");
     this.logged = !!dataJson;
-    this.userData = dataJson ? JSON.parse(dataJson) : null;
+    this.user = dataJson ? JSON.parse(dataJson) : null;
 
-    if (this.userData && 
-      ~~(Date.now()/1000) >= this.userData.expires
+    if (this.user && 
+      ~~(Date.now()/1000) >= this.user.expires
     ) { // If expires
       this.logged = false;
-      this.userData = null;
+      this.user = null;
     }
   }
   public isLogged() {
@@ -34,13 +34,16 @@ export class UserService {
     let user_data = await this.api.userSocialSignin(social);
     console.log(user_data);
     this.logged = true;
-    localStorage.setItem("user_data", JSON.stringify(user_data));
+    this.user = user_data;
+    localStorage.setItem("user", JSON.stringify(user_data));
+  
     this.router.navigate(['/shop/']);
-    
   }
 
   async signin(userSignin: UserSignin) {
-    await this.api.userSignin(userSignin);
+    this.user = await this.api.userSignin(userSignin);
+    this.logged = true;
+    this.router.navigate(['/shop/']);
   }
 
   async signup(userSignup: UserSignup) {
@@ -49,7 +52,17 @@ export class UserService {
       throw {field: "retypePassword", str: "mismatchPasswords"};
     }
     
-    await this.api.userSignup(userSignup);
+    this.user = await this.api.userSignup(userSignup);
+    this.logged = true;
+    this.router.navigate(['/shop/']);
+  }
+
+  async logout() {
+    await this.api.userLogout();
+    localStorage.removeItem("user") // Remove user from local storage
+    this.logged = false;
+    this.user = null;
+    this.router.navigate(['/signin/']);
   }
   
 }

@@ -51,7 +51,7 @@
     box-sizing: border-box;
     padding: 20px;
     border-radius: 20px;
-    flex: 33%;
+    flex: 40%;
 }
 
 :host > div {
@@ -88,7 +88,7 @@
     box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.75);
 }
 .car-el-img {
-    height: 150px;
+    height: 100px;
     background-position: center;
     background-size: contain;
     background-repeat: no-repeat;
@@ -147,4 +147,17 @@
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.car-el-buy-button {
+    background-color: rgb(43, 245, 70);
+    color: white;
+    width: 130px;
+    align-self: center;
+    border-radius: 5px;
+    text-align: center;
+    padding: 5px;
+    font-size: 12pt;
+    font-weight: bold;
+    box-sizing: border-box;
 }

@@ -4,7 +4,7 @@
         <div (click)="router.navigate([''])">
             {{ 'navbar.home' | translate }}
         </div>
-        <div value="shop" (click)="router.navigate(['/shop/'])">
+        <div (click)="router.navigate(['/shop/'])">
             {{ 'navbar.shop' | translate }}
         </div>
         <div class="header-menu-lang">
@@ -18,8 +18,12 @@
                 </div>
             </div>
         </div>
-        <div value="user" (click)="router.navigate(['/account/'])">
+        <div (click)="router.navigate(['/account/'])">
             {{ 'navbar.account' | translate }}
+        </div>
+        <div class="cart-icon" (click)="router.navigate(['/cart/'])">
+            <i class="gg-shopping-cart"></i>
+            <div *ngIf="cartService.cart.totalCount > 0" class="cart-count">{{ cartService.cart.totalCount }}</div>
         </div>
     </div>
 </div>

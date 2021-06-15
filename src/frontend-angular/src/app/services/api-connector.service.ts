@@ -1,10 +1,10 @@
 import { UserSocialSignin, UserSignin, UserSignup } from './../classes/user';
-import { CarList, CarSearch } from './../components/car-list/car-list.component';
 
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { UserService } from './user.service';
+import { CarList, CarSearch } from '../classes/car';
 
 
 @Injectable({
@@ -20,6 +20,7 @@ export class ApiConnectorService {
       let { content, success }:any = await this.http.request<obj>(method, this.base_url + uri, {
         body: data
       }).toPromise();
+      console.log(content);
       return content;
     } catch(e) {
       console.log(e);
@@ -32,12 +33,26 @@ export class ApiConnectorService {
     return this.req<CarList>('cars/search', 'POST', search);
   }
 
-  setFavoriteCar(car_id: number) {
+  setFavoriteCar(car_id: string) {
     return this.req<CarList>('cars/favorite', 'PUT', {car_id: car_id})
   }
 
-  unsetFavoriteCar(car_id: number) {
+  // FAV
+  unsetFavoriteCar(car_id: string) {
     return this.req<CarList>('cars/favorite', 'DELETE', {car_id: car_id})
+  }
+
+  //CART
+  getCart() {
+    return this.req('cart/get', 'GET', null);
+  }
+
+  addToCart(car_id: string, qty: number=1) {
+    return this.req('cart/add_car', 'PUT', {car_id: car_id, qty: qty});
+  }
+
+  delFromCart(car_id: string) {
+    return this.req('cart/del_car', 'DELETE', {car_id: car_id});
   }
 
   //USER
@@ -53,7 +68,8 @@ export class ApiConnectorService {
     return this.req('user/signup', 'POST', userSignup);
   }
 
-  
-
+  userLogout() {
+    return this.req('user/logout', 'GET', null);
+  }
 
 }

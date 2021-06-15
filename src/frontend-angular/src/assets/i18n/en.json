@@ -26,10 +26,10 @@
         "year": "This year",
         "orderby": "Order by",
         "expensive": "Most expensive",
-        "morekm": "More kilometers",
-        "lesskm": "Less kilometers",
-        "cheap": "Most cheaper",
-        "popular": "Popularity",
+        "mostkm": "More kilometers",
+        "leastkm": "Less kilometers",
+        "cheaper": "Most cheaper",
+        "popularity": "Popularity",
         "recent": "Recent cars"
     },
     "popup": {
@@ -38,5 +38,11 @@
     "login": "Login",
     "cancel": "Cancel",
     "signin": "Signin",
-    "signup": "Signup"
+    "signup": "Signup",
+    "car": {
+        "buy": "Buy"
+    },
+    "cart": {
+        "askaddtocart": "Do you want to add car to cart?"
+    }
 }

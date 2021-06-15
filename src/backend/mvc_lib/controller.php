@@ -31,7 +31,10 @@ abstract class Controller {
     }
 
     public function end() {
-        $this->model->db->close();
+        if (isset($this->model)) {
+            $this->model->db->close();
+        }
+        
     }
 }
 
