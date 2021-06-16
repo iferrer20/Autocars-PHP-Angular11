@@ -94,15 +94,16 @@ CREATE TABLE users (
 	email VARCHAR(64) NOT NULL UNIQUE,
 	username VARCHAR(20) UNIQUE,
 	password CHAR(44),
-	privileges ENUM('ADMIN', 'STAFF')
+	privileges ENUM('ADMIN', 'STAFF'),
+	verified BOOLEAN DEFAULT 0
 );
 
 DROP TABLE IF EXISTS favorites;
 CREATE TABLE favorites (
 	user_id CHAR(17) NOT NULL,
 	car_id CHAR(17) NOT NULL,
-	FOREIGN KEY (user_id) REFERENCES users(user_id),
-	FOREIGN KEY (car_id) REFERENCES cars(car_id),
+	FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+	FOREIGN KEY (car_id) REFERENCES cars(car_id) ON DELETE CASCADE,
 	PRIMARY KEY (user_id, car_id)
 );
 
@@ -111,8 +112,8 @@ CREATE TABLE cart (
 	user_id CHAR(17) NOT NULL,
 	car_id CHAR(17) NOT NULL,
 	qty INT NOT NULL,
-	FOREIGN KEY (user_id) REFERENCES users(user_id),
-	FOREIGN KEY (car_id) REFERENCES cars(car_id),
+	FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+	FOREIGN KEY (car_id) REFERENCES cars(car_id) ON DELETE CASCADE,
 	PRIMARY KEY (user_id, car_id)
 );
 
@@ -224,18 +225,27 @@ BEGIN
 		DECLARE hash CHAR(40);
 		DECLARE realhash CHAR(40);
 		DECLARE salt CHAR(4);
+		DECLARE verified BOOLEAN;
 		
-		SELECT SUBSTRING(u.password, 1, 4), SUBSTRING(u.password, 5), u.user_id
-		INTO salt, realhash, user_id
+		SELECT SUBSTRING(u.password, 1, 4), SUBSTRING(u.password, 5), u.user_id, u.verified
+		INTO salt, realhash, user_id, verified
 		FROM users AS u 
 		WHERE (u.username = username OR u.email = username) 
 		LIMIT 1;
+
+		IF NOT verified THEN
+			SIGNAL SQLSTATE '45000'
+			SET MESSAGE_TEXT = 'You must verify email';
+		END IF;
 
 		IF realhash IS NOT NULL THEN
 			SET hash = SHA1(CONCAT(salt, password));
 			IF NOT STRCMP(hash, realhash) THEN
 				LEAVE checkHash;
 			END IF;
+		ELSEIF user_id IS NOT NULL THEN
+			SIGNAL SQLSTATE '45000'
+			SET MESSAGE_TEXT = 'You must login with gmail or github';
 		END IF;
 		SIGNAL SQLSTATE '45000'
 		SET MESSAGE_TEXT = 'Invalid username or password';
@@ -254,7 +264,7 @@ BEGIN
 	SELECT u.user_id INTO user_id FROM users AS u WHERE u.email = email LIMIT 1;
 	IF user_id IS NULL THEN
 		SET user_id = UUID_SHORT();
-		INSERT INTO users (user_id, email, username, password) VALUES (user_id, email, NULL, NULL);
+		INSERT INTO users (user_id, email, username, password, verified) VALUES (user_id, email, NULL, NULL, 1);
 	END IF;
 
 	SELECT user_id;
@@ -468,6 +478,7 @@ BEGIN
 	SELECT cars.*, c.qty FROM cart AS c INNER JOIN cars ON cars.car_id = c.car_id WHERE c.user_id = user_id;
 END$$
 DELIMITER ;
+
 
 -- Cars
 CALL createCar('Audi', 'Coche audi 1', 2400, 5000, 'Audi');

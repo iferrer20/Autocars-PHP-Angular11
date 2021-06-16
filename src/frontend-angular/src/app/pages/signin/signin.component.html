@@ -1,10 +1,11 @@
-<div id="signin-error">⠀</div>
+<div id="signin-error">{{error}}</div>
 <div id="user-signin-email">
     <input type="text" placeholder="Email" [(ngModel)]="userSignin.email">
     <input type="password" placeholder="Password" [(ngModel)]="userSignin.password" (keyup.enter)="onSignin()">
     <div (click)="onSignin()">Signin</div>
 </div>
 <div id="redirect-signup" (click)="router.navigate(['/signup/'])">Signup</div>
+<div id="redirect-recover" (click)="router.navigate(['/recover/'])">Forget Password?</div>
 <firebase-ui></firebase-ui>
 <!-- 
 <button (click)="auth.googleAuth()">Login with google</button>

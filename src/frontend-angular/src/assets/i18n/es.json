@@ -44,6 +44,8 @@
     },
     "cart": {
         "askaddtocart": "Quieres añadir el producto al carrito?"
-    }
+    },
+    "emailverified": "Email verificado correctamente",
+    "error": "Ha ocurrido un error"
 
 }

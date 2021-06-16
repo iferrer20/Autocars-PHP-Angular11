@@ -1,3 +1,4 @@
+import { CartService } from 'src/app/services/cart.service';
 import { UserSignin, UserSocialSignin } from './../../classes/user';
 import { ApiConnectorService } from './../../services/api-connector.service';
 import { Component, OnDestroy, OnInit } from '@angular/core';
@@ -17,7 +18,12 @@ export class SigninComponent implements OnInit, OnDestroy {
 
   socialSubscription: Subscription;
   userSignin: UserSignin;
-  constructor(public user: UserService, private angularfire: AngularFireAuth, public router: Router) {
+  error: string;
+
+  constructor(public user: UserService, 
+              private angularfire: AngularFireAuth, 
+              public router: Router, 
+              private cartService: CartService) {
     this.socialSubscription = this.angularfire.idToken.subscribe({
       next: (idToken: any) => {
         if (idToken) {
@@ -29,6 +35,7 @@ export class SigninComponent implements OnInit, OnDestroy {
       email: "",
       password: ""
     }
+    this.error = "⠀";
   }
 
   async onSocialSignin(idToken: any) {
@@ -40,7 +47,14 @@ export class SigninComponent implements OnInit, OnDestroy {
     await this.user.socialSignin(social);
   }
   onSignin() {
-    this.user.signin(this.userSignin);
+    this.user.signin(this.userSignin)
+    .then(() => {
+      this.cartService.get();
+    })
+    .catch((e) => {
+      this.error = e;
+    });
+    
   }
   ngOnInit(): void {
     this.angularfire.signOut();

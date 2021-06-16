@@ -13,7 +13,7 @@ function check_jwt($optional = false) {
     try {
         $jwt_data = (array) JWT::decode($token);
         // Check expiration
-        if ($jwt_data->expires >= time()) {
+        if (time() >= $jwt_data['expires']) {
             throw new Exception();
         }
         Client::$jwt_data = $jwt_data;

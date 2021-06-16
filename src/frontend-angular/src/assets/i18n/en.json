@@ -44,5 +44,7 @@
     },
     "cart": {
         "askaddtocart": "Do you want to add car to cart?"
-    }
+    },
+    "emailverified": "Email verified!",
+    "error": "An error occurred"
 }

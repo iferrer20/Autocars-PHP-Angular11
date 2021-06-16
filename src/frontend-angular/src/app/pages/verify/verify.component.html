@@ -1,0 +1,7 @@
+<div *ngIf="success">
+    {{'emailverified' | translate }}
+</div>
+<div *ngIf="error">
+    {{'error' | translate }}
+</div>
+<div id="redirect-signin" (click)="router.navigate(['/signin/'])">Signin</div>

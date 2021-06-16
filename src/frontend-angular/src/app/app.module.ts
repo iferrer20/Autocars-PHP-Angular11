@@ -29,6 +29,8 @@ import { PopupComponent } from './components/popup/popup.component';
 import { CartComponent } from './pages/cart/cart.component';
 import { CartElementComponent } from './components/cart-element/cart-element.component';
 import { CartListComponent } from './components/cart-list/cart-list.component';
+import { VerifyComponent } from './pages/verify/verify.component';
+import { RecoverComponent } from './pages/recover/recover.component';
 
 const firebaseUiAuthConfig: firebaseui.auth.Config = {
   signInFlow: 'popup',
@@ -59,7 +61,9 @@ const firebaseUiAuthConfig: firebaseui.auth.Config = {
     PopupComponent,
     CartComponent,
     CartElementComponent,
-    CartListComponent
+    CartListComponent,
+    VerifyComponent,
+    RecoverComponent
   ],
   imports: [
     BrowserModule,

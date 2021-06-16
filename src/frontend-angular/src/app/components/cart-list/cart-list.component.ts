@@ -8,9 +8,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CartListComponent implements OnInit {
 
-  constructor(public cartService: CartService) { }
+  constructor(public cartService: CartService) {
+    this.cartService.get();
+  }
 
   ngOnInit(): void {
+
   }
 
 }

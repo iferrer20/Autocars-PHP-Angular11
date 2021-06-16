@@ -1,9 +1,17 @@
-<div id="signup-error"></div>
-<div id="user-signup-email">
-    <input type="text" placeholder="Email" [(ngModel)]="userSignup.email">
-    <input type="text" placeholder="Username" [(ngModel)]="userSignup.username">
-    <input type="password" placeholder="Password" [(ngModel)]="userSignup.password">
-    <input type="password" placeholder="Retype password" [(ngModel)]="userSignup.retypePassword" (keyup.enter)="onSignup()">
-    <div (click)="onSignup()">Signup</div>
+<div *ngIf="success">
+    {{'verifyemail' | translate}}
 </div>
-<div id="redirect-signin" (click)="router.navigate(['/signin/'])">Signup</div>
+<div id="signup-error"></div>
+<div id="user-signup-email" *ngIf="!success">
+    <input type="text" placeholder="Email" (input)="verifyEmail()" [(ngModel)]="userSignup.email">
+    <div class="signup-error-field">{{errors.email | translate}}</div>
+    <input type="text" placeholder="Username" (input)="verifyUsername()" [(ngModel)]="userSignup.username">
+    <div class="signup-error-field">{{errors.username | translate}}</div>
+    <input type="password" placeholder="Password" (input)="verifyPassword()" [(ngModel)]="userSignup.password">
+    <div class="signup-error-field">{{errors.password | translate}}</div>
+    <input type="password" placeholder="Retype password" (input)="verifyRetypePassword()" [(ngModel)]="userSignup.retypePassword" (keyup.enter)="onSignup()">
+    <div class="signup-error-field">{{errors.retypePassword | translate}}</div>
+    <div id="signup-button" (click)="onSignup()">Signup</div>
+</div>
+<div id="redirect-signin" (click)="router.navigate(['/signin/'])">Signin</div>
+

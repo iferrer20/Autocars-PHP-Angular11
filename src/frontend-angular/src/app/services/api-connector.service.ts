@@ -72,4 +72,8 @@ export class ApiConnectorService {
     return this.req('user/logout', 'GET', null);
   }
 
+  userVerify(token: string) {
+    return this.req('user/verify', 'POST', {token: token});
+  }
+
 }

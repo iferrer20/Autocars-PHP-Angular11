@@ -9,13 +9,15 @@ import { UserService } from 'src/app/services/user.service';
   styleUrls: ['./signup.component.css']
 })
 export class SignupComponent implements OnInit {
-  
+  success: boolean;
   userSignup: UserSignup;
   errors = {
     email: "⠀",
+    username: "⠀",
     password: "⠀",
     retypePassword: "⠀"
   }
+
 
   constructor(private user: UserService, public router: Router) {
     this.userSignup = {
@@ -24,18 +26,58 @@ export class SignupComponent implements OnInit {
       password: "",
       retypePassword: ""
     }
+    this.success = false;
   }
 
-  verifySignup() {
-    
-  }
-  async onSignup() {
-    this.verifySignup();
-    try {
-      await this.user.signup(this.userSignup);
-    } catch(e) {
-      console.log(e);
+  verifyEmail() {
+    if (!/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(this.userSignup.email)) {
+      this.errors.email = "invalidemail";
+      return false;
     }
+    this.errors.email = "⠀";
+    return true;
+  }
+  verifyUsername(): boolean {
+    if (this.userSignup.username.length < 5) {
+      this.errors.username = "usernameshort";
+      return false;
+    }
+    this.errors.username = "⠀";
+    return true;
+  }
+  verifyPassword(): boolean {
+    if (this.userSignup.password.length < 5) {
+      this.errors.password = "passwordshort";
+      return false;
+    }
+    this.errors.password = "⠀";
+    return true;
+  }
+  verifyRetypePassword() {
+    if (this.userSignup.password != this.userSignup.retypePassword) {
+      this.errors.retypePassword = "passwordmismach";
+      return false;
+    }
+    this.errors.retypePassword = "⠀";
+    return true;
+  }
+  onSignup() {
+    let error = [
+      this.verifyEmail(),
+      this.verifyPassword(),
+      this.verifyUsername(),
+      this.verifyRetypePassword()
+    ]
+    if (error.every((e) => e)) {
+      this.user.signup(this.userSignup)
+      .then(() => {
+        this.success = true;
+      })
+      .catch(() => {
+
+      });
+    }
+    
     
   }
   ngOnInit(): void {

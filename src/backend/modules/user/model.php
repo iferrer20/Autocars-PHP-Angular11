@@ -41,6 +41,14 @@ class UserModel extends Model {
         return $user;
     }
 
+    public function verify_email($email) {
+        $this->db->query(
+            'UPDATE users SET verified = 1 WHERE email = ?',
+            's',
+            $email
+        );
+    }
+
 }
 
 ?>

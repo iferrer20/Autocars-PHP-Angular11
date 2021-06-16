@@ -14,7 +14,7 @@ class UserController extends Controller {
         $expires = strtotime("+1 week");
         $token = JWT::encode([
             'user_id' => $user->user_id,
-            'expires' => strtotime($expires)
+            'expires' => $expires
         ]);
         setcookie('token', $token, $expires, '/', 'localhost', false, true); // http-only security
         // Give aditional user data
@@ -30,16 +30,33 @@ class UserController extends Controller {
     
     #[utils('jwt')]
     public function signin_post(UserSignin $user) {
+        
         $uid = $this->model->signin($user);
         $user = $this->model->get_user($uid);
         $this->give_access($user);
     }
     
-    #[utils('jwt')]
+    #[utils('jwt', 'mail')]
     public function signup_post(UserSignup $user) {
         $uid = $this->model->signup($user);
         $user = $this->model->get_user($uid);
-        $this->give_access($user);
+        // $this->give_access($user);
+        $token = base64_encode(JWT::encode([
+            "email" => $user->email,
+            "expires" => strtotime("+1 hours")
+        ]));
+        Utils\Mail::send_mail($user->email, "Verify Account", "<h1>Autocars</h1><p>You need to verify account</p><a href=\"http://localhost/verify/$token\"><div style=\"background-color: black; color: white; font-weight: bold; padding: 5px; width: 100px; border-radius: 10px;\">Verificar</div></a>");
+        
+    }
+    #[utils('jwt')]
+    public function verify_post(string $token) {
+        $token_data = JWT::decode($token); 
+        $email = $token_data->email;
+        $expiration = $token_data->expires;
+        if (time() >= $expiration) {
+            throw new BadReqException("Invalid token");
+        }
+        $this->model->verify_email($email);
     }
     
     #[utils('firebase', 'jwt')]

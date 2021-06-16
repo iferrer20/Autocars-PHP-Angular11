@@ -17,12 +17,18 @@ export class CartService {
       totalPrice: 0,
       totalCount: 0
     }
-
-    this.get(); // GET CART
   }
 
   save() {
     localStorage.setItem("cart", JSON.stringify(this.cart));
+  }
+  clear() {
+    this.cart = {
+      rows: {},
+      totalCount: 0,
+      totalPrice: 0
+    };
+    this.save();
   }
 
   async addCar(car: Car) {
@@ -81,6 +87,7 @@ export class CartService {
   }
 
   async get() {
+    
     let dataCart = localStorage.getItem("cart");
     if (dataCart) {
       this.cart = JSON.parse(dataCart);
@@ -93,18 +100,21 @@ export class CartService {
         totalCount: 0,
         totalPrice: 0
       };
+      
       cars.forEach((e:any) => {
         this.cart.rows[e.car_id] = {
           car: e,
           qty: e.qty
         }
       });
+      Object.keys(this.cart.rows).forEach(key => (
+        this.cart.totalCount += this.cart.rows[key].qty,
+        this.cart.totalPrice += this.cart.rows[key].car.price * this.cart.rows[key].qty
+      ));
+
     }
 
-    Object.keys(this.cart.rows).forEach(key => (
-      this.cart.totalCount += this.cart.rows[key].qty,
-      this.cart.totalPrice += this.cart.rows[key].car.price * this.cart.rows[key].qty
-    ));
+
     
     this.save();
   }

@@ -1,3 +1,5 @@
+import { RecoverComponent } from './pages/recover/recover.component';
+import { VerifyComponent } from './pages/verify/verify.component';
 import { CartComponent } from './pages/cart/cart.component';
 import { AuthGuard } from './guards/auth.guard';
 import { ShopComponent } from './pages/shop/shop.component';
@@ -16,6 +18,8 @@ const routes: Routes = [
   { path: 'signin', component: SigninComponent },
   { path: 'signup', component: SignupComponent},
   { path: 'cart', component: CartComponent },
+  { path: 'verify/:token', component: VerifyComponent },
+  { path: 'recover', component: RecoverComponent },
   { path: '**', component: NotFoundComponent }
 ];
 
