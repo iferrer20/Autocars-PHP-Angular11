@@ -79,7 +79,29 @@ class UserController extends Controller {
     public function logout_get() {
         setcookie('token', "", time() - 3600, '/', 'localhost', false, true); // Remove token
     }
-    
+
+    #[utils('jwt', 'mail')]
+    public function recover_send_post(string $email) {
+        if ($this->model->email_exists($email)) {
+            $token = base64_encode(JWT::encode([
+                "email" => $email,
+                "expires" => strtotime("+1 hours")
+            ]));
+            Utils\Mail::send_mail($email, "Recover password", "<h1>Autocars</h1><p>Recover your password</p><a href=\"http://localhost/recover/$token\"><div style=\"background-color: black; color: white; font-weight: bold; padding: 5px; width: 100px; border-radius: 10px;\">Recover</div></a>");
+        }
+        
+    }
+    #[utils('jwt')]
+    public function recover_changepass_post(string $token, string $new_password) {
+        $token_data = JWT::decode($token); 
+        $email = $token_data->email;
+        $expiration = $token_data->expires;
+        if (time() >= $expiration) {
+            throw new BadReqException("Invalid token");
+        }
+        $this->model->change_password($email, $new_password);
+
+    }
 }
 
 

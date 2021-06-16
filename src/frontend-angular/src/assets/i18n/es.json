@@ -46,6 +46,7 @@
         "askaddtocart": "Quieres añadir el producto al carrito?"
     },
     "emailverified": "Email verificado correctamente",
-    "error": "Ha ocurrido un error"
+    "error": "Ha ocurrido un error",
+    "notfound": "No se ha encontrado la página"
 
 }

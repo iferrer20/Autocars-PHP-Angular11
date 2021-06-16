@@ -1,7 +1,7 @@
 <div *ngIf="success">
     {{'verifyemail' | translate}}
 </div>
-<div id="signup-error"></div>
+<div id="signup-error" *ngIf="!success">{{errors.server}}</div>
 <div id="user-signup-email" *ngIf="!success">
     <input type="text" placeholder="Email" (input)="verifyEmail()" [(ngModel)]="userSignup.email">
     <div class="signup-error-field">{{errors.email | translate}}</div>

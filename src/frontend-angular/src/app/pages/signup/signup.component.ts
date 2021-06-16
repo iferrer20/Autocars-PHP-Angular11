@@ -15,7 +15,8 @@ export class SignupComponent implements OnInit {
     email: "⠀",
     username: "⠀",
     password: "⠀",
-    retypePassword: "⠀"
+    retypePassword: "⠀",
+    server: "⠀"
   }
 
 
@@ -73,8 +74,8 @@ export class SignupComponent implements OnInit {
       .then(() => {
         this.success = true;
       })
-      .catch(() => {
-
+      .catch((e) => {
+        this.errors.server = e;
       });
     }
     

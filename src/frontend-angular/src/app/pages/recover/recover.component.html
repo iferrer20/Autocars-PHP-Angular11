@@ -1,1 +1,21 @@
-<p>recover works!</p>
+<div *ngIf="!token; else changePassword" style="display: flex; align-items: center; flex-direction: column;">
+    <div style="color: red;">{{error.email}}</div>
+    <div id="recover" *ngIf="!success">
+        <input type="text" placeholder="Email" [(ngModel)]="email" (keyup.enter)="sendRecover()">
+        <div id="recover-button" (click)="sendRecover()">Send Recover</div>
+    </div>
+    <div *ngIf="success">
+        Email sent
+    </div>
+    <div id="redirect-signin" (click)="router.navigate(['/signin/'])">Signin</div>
+</div>
+
+<div *ngIf="success && token">{{'passwordchanged' | translate}}</div>
+<div *ngIf="success && token" id="redirect-signin" (click)="router.navigate(['/signin/'])">Signin</div>
+<ng-template #changePassword>
+    <div *ngIf="!success" style="color: red;">{{error.password}}</div>
+    <input *ngIf="!success" type="password" placeholder="new password" [(ngModel)]="password">
+    <input *ngIf="!success" type="password" placeholder="Retype new password" [(ngModel)]="retypePassword" (keyup.enter)="chPasswd()">
+    <div *ngIf="!success" id="change-button" (click)="chPasswd()">Change password</div>
+</ng-template>
+

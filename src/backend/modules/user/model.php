@@ -49,6 +49,23 @@ class UserModel extends Model {
         );
     }
 
+    public function email_exists($email) {
+        return $this->db->query(
+            'SELECT EXISTS(SELECT * FROM users WHERE email = ?) AS email_exists',
+            's',
+            $email
+        )[0];
+    }
+
+    public function change_password($email, $new_password) {
+        $this->db->query(
+            'CALL userChangePassword(?, ?)',
+            'ss',
+            $email,
+            $new_password
+        );
+    }
+
 }
 
 ?>

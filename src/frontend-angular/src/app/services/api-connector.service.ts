@@ -76,4 +76,12 @@ export class ApiConnectorService {
     return this.req('user/verify', 'POST', {token: token});
   }
 
+  userSendRecover(email: string) {
+    return this.req('user/recover_send', 'POST', {email: email});
+  }
+  
+  userChangePass(token: string, newPassword: string) {
+    return this.req('user/recover_changepass', 'POST', {token: token, new_password: newPassword});
+  }
+
 }

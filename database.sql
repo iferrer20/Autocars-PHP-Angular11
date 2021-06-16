@@ -156,6 +156,21 @@ BEGIN
 END$$
 DELIMITER ;
 
+SET GLOBAL log_bin_trust_function_creators = 1;
+DROP FUNCTION IF EXISTS createHash;
+DELIMITER $$
+CREATE FUNCTION createHash(password VARCHAR(100)) RETURNS CHAR(44)
+BEGIN
+	DECLARE salt CHAR(4);
+	DECLARE hash CHAR(40);
+	
+	SET salt = SUBSTRING(MD5(RAND()) from 1 for 4);
+	SET hash = SHA1(CONCAT(salt, password));
+
+	RETURN CONCAT(salt, hash);
+END$$
+DELIMITER ;
+
 DROP PROCEDURE IF EXISTS userSignup;
 DELIMITER $$
 CREATE PROCEDURE userSignup (
@@ -165,8 +180,6 @@ CREATE PROCEDURE userSignup (
 )
 BEGIN
 	DECLARE user_id CHAR(17);
-	DECLARE salt CHAR(4);
-	DECLARE hash CHAR(40);
 	DECLARE errstr VARCHAR(255);
 	DECLARE err VARCHAR(255);
 	DECLARE EXIT HANDLER FOR 1062
@@ -198,14 +211,17 @@ BEGIN
 		SET MESSAGE_TEXT = errstr;
 	END IF;
 
-	SET salt = SUBSTRING(MD5(RAND()) from 1 for 4);
-	SET hash = SHA1(CONCAT(salt, password));
+	
 	SET user_id = UUID_SHORT();
 	
-	INSERT INTO users (user_id, email, username, password) VALUES (user_id, email, username, CONCAT(salt, hash));
+	INSERT INTO users (user_id, email, username, password) VALUES (user_id, email, username, createHash(password));
 	SELECT user_id;
 END$$
 DELIMITER ;
+
+
+
+
 
 /* DROP PROCEDURE IF EXISTS userSetPrivilege;
 CREATE PROCEDURE userSetPrivilege (
@@ -251,6 +267,23 @@ BEGIN
 		SET MESSAGE_TEXT = 'Invalid username or password';
 	END;
 	SELECT user_id;
+END$$
+DELIMITER ;
+
+DROP PROCEDURE IF EXISTS userChangePassword;
+DELIMITER $$
+CREATE PROCEDURE userChangePassword(
+	IN user_id VARCHAR(100),
+	IN password VARCHAR(100)
+)
+BEGIN
+	/* VALIDATION */
+	IF LENGTH(password) < 5 THEN
+		SIGNAL SQLSTATE '45000' 
+		SET MESSAGE_TEXT = 'Password too short';
+	END IF;
+
+	UPDATE users AS u SET u.password=createHash(password) WHERE u.user_id = user_id OR u.email = user_id LIMIT 1;
 END$$
 DELIMITER ;
 

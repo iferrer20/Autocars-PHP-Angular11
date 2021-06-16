@@ -20,6 +20,7 @@ const routes: Routes = [
   { path: 'cart', component: CartComponent },
   { path: 'verify/:token', component: VerifyComponent },
   { path: 'recover', component: RecoverComponent },
+  { path: 'recover/:token', component: RecoverComponent },
   { path: '**', component: NotFoundComponent }
 ];
 
