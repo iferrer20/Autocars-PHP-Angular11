@@ -12,8 +12,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class CartService {
   public cart: Cart;
   constructor(private api: ApiConnectorService,
-              private user: UserService,
-              private router: Router) {
+              private user: UserService) {
     this.cart = {
       rows: {},
       totalPrice: 0,
@@ -88,6 +87,11 @@ export class CartService {
     this.cart.totalPrice -= row.car.price * row.qty;
     delete this.cart.rows[car.car_id];
     this.save();
+  }
+
+  async checkout() {
+    let resp = await this.api.checkoutCart();
+    this.clear();
   }
 
   async get() {

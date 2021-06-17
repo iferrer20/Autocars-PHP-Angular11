@@ -26,6 +26,13 @@ class CartModel extends Model {
             $user_id
         );
     }
+    public function checkout($user_id) {
+        return $this->db->query(
+            'CALL cartCheckout(?)',
+            's',
+            $user_id
+        );
+    }
     
 }
 

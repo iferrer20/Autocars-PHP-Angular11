@@ -16,6 +16,9 @@ class CartController extends Controller {
         res::ok($cart);
         
     }
+    public function checkout_get() {
+        $this->model->checkout(Client::$jwt_data['user_id']);
+    }
     
 }
 ?>

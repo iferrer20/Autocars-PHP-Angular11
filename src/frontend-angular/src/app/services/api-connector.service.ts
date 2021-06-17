@@ -55,6 +55,10 @@ export class ApiConnectorService {
     return this.req('cart/del_car', 'DELETE', {car_id: car_id});
   }
 
+  checkoutCart() {
+    return this.req('cart/checkout', 'GET', null);
+  }
+
   //USER
   userSocialSignin(social: UserSocialSignin) {
     return this.req('user/social_signin', 'POST', social);
@@ -83,5 +87,6 @@ export class ApiConnectorService {
   userChangePass(token: string, newPassword: string) {
     return this.req('user/recover_changepass', 'POST', {token: token, new_password: newPassword});
   }
+
 
 }

@@ -1,3 +1,5 @@
+import { PopupService } from './../../services/popup.service';
+import { UserService } from './../../services/user.service';
 import { CartService } from './../../services/cart.service';
 import { Component, OnInit } from '@angular/core';
 
@@ -8,8 +10,17 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CartListComponent implements OnInit {
 
-  constructor(public cartService: CartService) {
-    this.cartService.get();
+  constructor(private user: UserService, public cartService: CartService, private popup: PopupService) {
+  }
+
+  onCheckout() {
+    if (!this.user.isLogged()) {
+      this.popup.needLogin();
+      return;
+    }
+    this.cartService.checkout();
+
+    
   }
 
   ngOnInit(): void {

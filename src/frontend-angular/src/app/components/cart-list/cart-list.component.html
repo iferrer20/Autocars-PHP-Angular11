@@ -3,3 +3,4 @@
 [carCart]="cartrow.value">
 </app-cart-element>
 <div class="total-price">Total price: {{cartService.cart.totalPrice | number}} €</div>
+<div class="checkout-button" (click)="onCheckout()">Checkout</div>

@@ -118,6 +118,25 @@ CREATE TABLE cart (
 	PRIMARY KEY (user_id, car_id)
 );
 
+DROP TABLE IF EXISTS invoices;
+CREATE TABLE invoices(
+	invoice_id CHAR(17) NOT NULL,
+	user_id CHAR(17) NOT NULL,
+	total_price INT NOT NULL,
+	FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+	PRIMARY KEY (invoice_id, user_id)
+);
+
+DROP TABLE IF EXISTS invoices_lines;
+CREATE TABLE invoices_lines(
+	invoice_id CHAR(17) NOT NULL,
+	line_id INT NOT NULL,
+	car_id CHAR(17) NOT NULL,
+	qty INT NOT NULL,
+	FOREIGN KEY (invoice_id) REFERENCES invoices(invoice_id) ON DELETE CASCADE,
+	PRIMARY KEY (invoice_id, line_id)
+);
+
 
 -- PROCEDURES
 DROP PROCEDURE IF EXISTS createCar;
@@ -498,22 +517,6 @@ BEGIN
 END$$
 DELIMITER ;
 
-DROP PROCEDURE IF EXISTS delFromCart;
-DELIMITER $$
-CREATE PROCEDURE delFromCart(
-	IN user_id CHAR(17),
-	IN car_id CHAR(17)
-)
-BEGIN
-	DELETE FROM cart AS c WHERE c.user_id = user_id AND c.car_id = car_id LIMIT 1;
-	IF ROW_COUNT() = 0 THEN
-		SIGNAL SQLSTATE '45000'
-		SET MESSAGE_TEXT = 'The car is not in cart';
-	END IF;
-	
-END$$
-DELIMITER ;
-
 DROP PROCEDURE IF EXISTS getCart;
 DELIMITER $$
 CREATE PROCEDURE getCart(
@@ -530,7 +533,23 @@ CREATE PROCEDURE cartCheckout(
 	IN user_id CHAR(17)
 )
 BEGIN
-	
+	DECLARE invoice_id CHAR(17);
+	SET invoice_id = UUID_SHORT();
+
+	INSERT INTO invoices SELECT invoice_id, c.user_id, SUM(price*qty) AS total_price FROM cart AS c INNER JOIN cars ON cars.car_id = c.car_id WHERE c.user_id = user_id GROUP BY c.user_id; -- Create new invoice
+	IF ROW_COUNT() > 0 THEN -- IF invoice has been created
+		INSERT INTO invoices_lines SELECT invoice_id, ROW_NUMBER() OVER (PARTITION BY user_id) AS line_id, c.car_id, c.qty 
+		FROM cart AS c INNER JOIN cars
+		ON cars.car_id = c.car_id 
+		WHERE c.user_id = user_id; -- INSERT CART TO invoices lines
+
+		UPDATE cart AS c 
+		INNER JOIN cars ON cars.car_id = c.car_id 
+		SET cars.stock=(cars.stock-c.qty) 
+		WHERE c.user_id = user_id; -- SUBSTRACT STOCK
+
+		DELETE FROM cart AS c WHERE c.user_id = user_id; -- DELETE CART WHEN CHECKOUT
+	END IF;
 END$$
 DELIMITER ;
 
