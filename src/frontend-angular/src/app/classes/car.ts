@@ -8,7 +8,8 @@ export interface Car {
     km: number,
     views: number,
     at: string,
-    favorite?: boolean
+    stock: number,
+    favorite?: boolean,
 }
 
 export interface CarCart {

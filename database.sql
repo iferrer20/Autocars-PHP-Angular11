@@ -62,8 +62,9 @@ CREATE TABLE cars (
 	brand INT NOT NULL,
 	at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	views INT NOT NULL DEFAULT 0,
+	stock INT NOT NULL,
 	PRIMARY KEY (car_id),
-	FOREIGN KEY (brand) REFERENCES brands(brand_id)
+	FOREIGN KEY (brand) REFERENCES brands(brand_id) ON DELETE CASCADE
 );
 -- offroad, sporty, minivan, van
 DROP TABLE IF EXISTS categories;
@@ -82,8 +83,8 @@ DROP TABLE IF EXISTS car_category;
 CREATE TABLE car_category (
 	car_id CHAR(17) NOT NULL,
 	category_id int NOT NULL,
-	FOREIGN KEY (car_id) REFERENCES cars(car_id),
-	FOREIGN KEY (category_id) REFERENCES categories(category_id),
+	FOREIGN KEY (car_id) REFERENCES cars(car_id) ON DELETE CASCADE,
+	FOREIGN KEY (category_id) REFERENCES categories(category_id) ON DELETE CASCADE,
 	PRIMARY KEY (car_id, category_id)
 );
 
@@ -126,11 +127,14 @@ CREATE PROCEDURE createCar (
 	IN description VARCHAR(1000),
 	IN km INT,
 	IN price INT,
-	IN brand VARCHAR(20)
+	IN brand VARCHAR(20),
+	IN stock INT,
+	IN category VARCHAR(20)
 )
 BEGIN
 	DECLARE car_id CHAR(17);
 	DECLARE brand_id INT;
+	DECLARE category_id INT;
 
 	SELECT b.brand_id INTO brand_id FROM brands AS b WHERE b.name = brand LIMIT 1;
 
@@ -139,8 +143,16 @@ BEGIN
 		SET MESSAGE_TEXT = 'Invalid brand';
 	END IF;
 
+	SELECT c.category_id INTO category_id FROM categories AS c WHERE c.name = category LIMIT 1;
+
+	IF category_id IS NULL THEN
+		SIGNAL SQLSTATE '45000'
+		SET MESSAGE_TEXT = 'Invalid category';
+	END IF;
+
 	SET car_id = UUID_SHORT();
-	INSERT INTO cars VALUES (car_id, name, description, km, price, brand_id, CURRENT_TIMESTAMP(), 0);
+	INSERT INTO cars VALUES (car_id, name, description, km, price, brand_id, CURRENT_TIMESTAMP(), 0, stock);
+	INSERT INTO car_category VALUES(car_id, category_id);
 
 	SELECT car_id;
 END$$
@@ -512,12 +524,30 @@ BEGIN
 END$$
 DELIMITER ;
 
+DROP PROCEDURE IF EXISTS cartCheckout;
+DELIMITER $$
+CREATE PROCEDURE cartCheckout(
+	IN user_id CHAR(17)
+)
+BEGIN
+	
+END$$
+DELIMITER ;
+
 
 -- Cars
-CALL createCar('Audi', 'Coche audi 1', 2400, 5000, 'Audi');
-CALL createCar('Audi A4', 'Coche audi A4', 0, 5000, 'Audi');
-CALL createCar('Audi A3', 'Coche audi A3', 2400, 10000, 'Audi');
-CALL createCar('Audi Q3', 'Coche audi Q3', 1000, 15000, 'Audi');
-CALL createCar('Volvo XC40', 'Coche volvo XC40', 0, 20000, 'Volvo');
+CALL createCar('Audi', 'Coche audi 1 TODOTERRENO', 2400, 5000, 'Audi', 10, 'offroad');
+CALL createCar('Audi A4', 'Coche audi A4 DEPORTIVO', 0, 5000, 'Audi', 10, 'sporty');
+CALL createCar('Audi A3', 'Coche audi A3 DEPORTIVO', 2400, 10000, 'Audi', 10, 'sporty');
+CALL createCar('Audi Q3', 'Coche audi Q3 DEPORTIVO', 1000, 15000, 'Audi', 10, 'sporty');
+CALL createCar('Volvo XC40', 'Coche volvo XC40 FURGONETA', 0, 20000, 'Volvo', 10, 'van');
+
+CALL createCar('Audi', 'Coche audi TODOTERRENO', 50000, 95000, 'Audi', 10, 'offroad');
+CALL createCar('Audi A4', 'Coche audi 2x DEPORTIVO', 150000, 15000, 'Audi', 10, 'sporty');
+CALL createCar('Audi A3', 'Coche audi 2 35 DEPORTIVO', 2400, 25000, 'Audi', 10, 'sporty');
+CALL createCar('Audi Q3', 'Coche audi 123 DEPORTIVO', 1000, 30000, 'Audi', 10, 'sporty');
+CALL createCar('Volvo XC40', 'Coche nose MINIVAN', 0, 10000, 'Volvo', 10, 'minivan');
+CALL createCar('Volvo XC40', 'Coche MINIVAN 2', 4000, 1000, 'Volvo', 10, 'minivan');
+
 
 CALL searchCar('', 0, 1000000, 0, 1000000, '', '', '', 'expensive', '', 1, 2);

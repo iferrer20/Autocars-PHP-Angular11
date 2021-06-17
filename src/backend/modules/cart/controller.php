@@ -13,7 +13,8 @@ class CartController extends Controller {
     }
     public function get_get() { // Get cart list
         $cart = $this->model->get(Client::$jwt_data['user_id']);
-        res::ok($cart);        
+        res::ok($cart);
+        
     }
     
 }

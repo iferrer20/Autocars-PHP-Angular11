@@ -21,7 +21,10 @@ export class RecoverComponent implements OnInit {
     this.password = '';
     this.retypePassword = '';
     this.success = false;
-    this.token = atob(this.actRoute.snapshot.params.token);
+    this.token = this.actRoute.snapshot.params.token;
+    if (this.token) {
+      this.token = atob(this.actRoute.snapshot.params.token);
+    }
     this.error = {
       email: '⠀',
       password: '⠀'

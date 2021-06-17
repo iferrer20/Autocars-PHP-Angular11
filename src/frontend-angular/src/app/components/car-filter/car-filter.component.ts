@@ -1,6 +1,9 @@
+import { EventData } from './../../classes/eventData';
 import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { Options } from '@angular-slider/ngx-slider';
 import { CarSearch } from 'src/app/classes/car';
+import { Location } from '@angular/common';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-car-filter',
@@ -8,7 +11,7 @@ import { CarSearch } from 'src/app/classes/car';
   styleUrls: ['./car-filter.component.css']
 })
 export class CarFilterComponent implements OnInit {
-  @Input() search!: CarSearch;
+  @Input() search: CarSearch;
   @Output() searchEvent: EventEmitter<CarSearch> = new EventEmitter();
 
   categoryOpened: boolean = false;
@@ -51,6 +54,7 @@ export class CarFilterComponent implements OnInit {
   };
   
   constructor() {
+    
   }
   setText(str: string) {
     this.search.text = str;
@@ -94,9 +98,11 @@ export class CarFilterComponent implements OnInit {
   }
 
   searchEmit() {
-    this.searchEvent.emit(this.search);
+    this.searchEvent.emit(this.search);    
   }
   ngOnInit(): void {
+    
+    
     //console.log(this.search);
   }
 }

@@ -31,6 +31,8 @@ import { CartElementComponent } from './components/cart-element/cart-element.com
 import { CartListComponent } from './components/cart-list/cart-list.component';
 import { VerifyComponent } from './pages/verify/verify.component';
 import { RecoverComponent } from './pages/recover/recover.component';
+import { CarImageSliderComponent } from './components/car-image-slider/car-image-slider.component';
+import { CategoriesComponent } from './components/categories/categories.component';
 
 const firebaseUiAuthConfig: firebaseui.auth.Config = {
   signInFlow: 'popup',
@@ -63,7 +65,9 @@ const firebaseUiAuthConfig: firebaseui.auth.Config = {
     CartElementComponent,
     CartListComponent,
     VerifyComponent,
-    RecoverComponent
+    RecoverComponent,
+    CarImageSliderComponent,
+    CategoriesComponent
   ],
   imports: [
     BrowserModule,

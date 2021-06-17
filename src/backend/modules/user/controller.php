@@ -87,7 +87,10 @@ class UserController extends Controller {
                 "email" => $email,
                 "expires" => strtotime("+1 hours")
             ]));
-            Utils\Mail::send_mail($email, "Recover password", "<h1>Autocars</h1><p>Recover your password</p><a href=\"http://localhost/recover/$token\"><div style=\"background-color: black; color: white; font-weight: bold; padding: 5px; width: 100px; border-radius: 10px;\">Recover</div></a>");
+            if ($this->model->email_exists($email)) {
+                Utils\Mail::send_mail($email, "Recover password", "<h1>Autocars</h1><p>Recover your password</p><a href=\"http://localhost/recover/$token\"><div style=\"background-color: black; color: white; font-weight: bold; padding: 5px; width: 100px; border-radius: 10px;\">Recover</div></a>");
+            }
+            
         }
         
     }

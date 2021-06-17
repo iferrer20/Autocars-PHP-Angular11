@@ -37,22 +37,14 @@ export class UserService {
     this.logged = true;
     this.user = user_data;
     localStorage.setItem("user", JSON.stringify(user_data));
-  
-    this.router.navigate(['/shop/']);
   }
 
   async signin(userSignin: UserSignin) {
     this.user = await this.api.userSignin(userSignin);
     this.logged = true;
-    this.router.navigate(['/shop/']);
   }
 
   async signup(userSignup: UserSignup) {
-    //if (userSignup.email )
-    if (userSignup.password != userSignup.retypePassword) {
-      throw {field: "retypePassword", str: "mismatchPasswords"};
-    }
-    
     await this.api.userSignup(userSignup);
   }
 

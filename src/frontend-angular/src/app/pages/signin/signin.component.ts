@@ -38,18 +38,26 @@ export class SigninComponent implements OnInit, OnDestroy {
     this.error = "⠀";
   }
 
-  async onSocialSignin(idToken: any) {
+  onSocialSignin(idToken: any) {
     let social: UserSocialSignin = {
       token: idToken
     };
     this.angularfire.signOut();
 
-    await this.user.socialSignin(social);
+    this.user.socialSignin(social)
+    .then(() => {
+      this.cartService.get();
+      this.router.navigate(['/shop/']);
+    })
+    .catch((e) => {
+      this.error = e;
+    });
   }
   onSignin() {
     this.user.signin(this.userSignin)
     .then(() => {
       this.cartService.get();
+      this.router.navigate(['/shop/']);
     })
     .catch((e) => {
       this.error = e;

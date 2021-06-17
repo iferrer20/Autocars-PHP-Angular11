@@ -4,6 +4,7 @@ import { Injectable } from '@angular/core';
 import { Car, CarCart } from '../classes/car';
 import { ApiConnectorService } from './api-connector.service';
 import { UserService } from './user.service';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -11,12 +12,14 @@ import { UserService } from './user.service';
 export class CartService {
   public cart: Cart;
   constructor(private api: ApiConnectorService,
-              private user: UserService) {
+              private user: UserService,
+              private router: Router) {
     this.cart = {
       rows: {},
       totalPrice: 0,
       totalCount: 0
     }
+    this.get();
   }
 
   save() {
@@ -33,32 +36,33 @@ export class CartService {
 
   async addCar(car: Car) {
     let row = this.cart.rows[car.car_id];
-    if (row) {
-      row.qty++;
-    } else {
+    if (!row) {
       this.cart.rows[car.car_id] = {
         car: car,
-        qty: 1
+        qty: 0
       };
-      row = this.cart.rows[car.car_id]; 
     }
+    this.incQty(car);
     // this.eventBus.emit("newCarCart", car); // Emit event 
-    if (this.user.isLogged()) {
-      await this.api.addToCart(car.car_id, row.qty);
-    }
-    this.cart.totalCount++;
-    this.cart.totalPrice += row.car.price;
-    this.save();
+    // if (this.user.isLogged()) {
+    //   await this.api.addToCart(car.car_id, row.qty);
+    // }
+    // this.cart.totalCount++;
+    // this.cart.totalPrice += row.car.price;
+    // this.save();
   }
   async incQty(car: Car) {
     let row = this.cart.rows[car.car_id];
-    row.qty++;
-    this.cart.totalCount++;
-    this.cart.totalPrice += row.car.price;
-    this.save();
-    if (this.user.isLogged()) {
-      await this.api.addToCart(car.car_id, row.qty);
+    if (row.qty != row.car.stock) {
+      row.qty++;
+      this.cart.totalCount++;
+      this.cart.totalPrice += row.car.price;
+      this.save();
+      if (this.user.isLogged()) {
+        await this.api.addToCart(car.car_id, row.qty);
+      }
     }
+    
   }
   async decQty(car: Car) {
     let row = this.cart.rows[car.car_id];
@@ -95,6 +99,9 @@ export class CartService {
     
     if (this.user.isLogged()) {
       let cars = await this.api.getCart();
+      if (!cars) {
+        cars = [];
+      }
       this.cart = {
         rows: {},
         totalCount: 0,
@@ -111,11 +118,8 @@ export class CartService {
         this.cart.totalCount += this.cart.rows[key].qty,
         this.cart.totalPrice += this.cart.rows[key].car.price * this.cart.rows[key].qty
       ));
-
     }
 
-
-    
     this.save();
   }
 }

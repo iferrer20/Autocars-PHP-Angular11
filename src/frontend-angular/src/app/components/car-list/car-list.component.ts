@@ -1,6 +1,8 @@
 import { Car, CarList, CarSearch } from './../../classes/car';
 import { ApiConnectorService } from './../../services/api-connector.service';
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-car-list',
@@ -12,7 +14,9 @@ export class CarListComponent implements OnInit {
   search: CarSearch;
   carlist: CarList;
 
-  constructor(private api: ApiConnectorService) {
+  constructor(private api: ApiConnectorService, 
+              private actRoute: ActivatedRoute, 
+              private location: Location) {
     this.carlist = {
       cars: [],
       pages: 1
@@ -21,7 +25,7 @@ export class CarListComponent implements OnInit {
       page: 1,
       categories: [],
       min_price: 500,
-      max_price: 20000
+      max_price: 100000
     };
   }
 
@@ -35,6 +39,7 @@ export class CarListComponent implements OnInit {
   }
   onChangeFilters() {
     this.search.page = 1;
+    this.location.replaceState("/shop/" + btoa(JSON.stringify(this.search)));
     this.searchCars(); 
   }
   onChangePage(page: number) {
@@ -43,6 +48,10 @@ export class CarListComponent implements OnInit {
   }
 
   ngOnInit() {
+    let search = this.actRoute.snapshot.params.search;
+    if (search) {
+      Object.assign(this.search, JSON.parse(atob(search)));
+    }
     this.searchCars();
   }
 }

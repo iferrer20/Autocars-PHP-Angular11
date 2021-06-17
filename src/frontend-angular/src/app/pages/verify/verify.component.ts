@@ -10,7 +10,6 @@ import { Route } from '@angular/compiler/src/core';
   styleUrls: ['./verify.component.css']
 })
 export class VerifyComponent implements OnInit, OnDestroy {
-  private sub!: Subscription;
   private token!: string;
   public error!: boolean;
   public success!: boolean;
@@ -27,14 +26,10 @@ export class VerifyComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.sub = this.url.params.subscribe(params => {
-      this.token = atob(params['token']);
-      this.verify();
-   });
-
+    this.token = atob(this.url.snapshot.params.token);
+    this.verify();
   }
   ngOnDestroy() {
-    this.sub.unsubscribe();
   }
 
 }

@@ -17,7 +17,7 @@ export class CarElementComponent implements OnInit {
   @Input() car!: Car;
   constructor(private api: ApiConnectorService, 
               private popup: PopupService,
-              private cart: CartService,
+              public cartService: CartService,
               private user: UserService) {
     
   }
@@ -47,7 +47,7 @@ export class CarElementComponent implements OnInit {
       if (this.user.isLogged()) {
       }
       
-      this.cart.addCar(this.car);
+      this.cartService.addCar(this.car);
     }
   }
 

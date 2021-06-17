@@ -3,6 +3,7 @@
   "javascript.implicitProjectConfig.experimentalDecorators": true,
   "compileOnSave": false,
   "compilerOptions": {
+    "strictPropertyInitialization": false,
     "baseUrl": "./",
     "outDir": "./dist/out-tsc",
     "forceConsistentCasingInFileNames": true,

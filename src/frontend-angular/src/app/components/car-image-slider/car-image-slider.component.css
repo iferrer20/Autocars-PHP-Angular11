@@ -1,0 +1,36 @@
+:host {
+    width: 100%;
+    min-height: 700px;
+    overflow: hidden;
+}
+.slider-images {
+    display: flex;
+    height: 100%;
+    transition: transform, 1s;
+}
+.slider-images::before {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: #00000088;
+}
+
+.slider-images-el {
+    width: 100%;
+    height: 100%;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+}
+.page-title {
+    position: absolute;
+    transform: translate(-50%,-50%);
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 40pt;
+    top: 50%;
+    left: 50%;
+    z-index: 3;
+    color: white;
+    font-weight: bold;
+}
